@@ -1,0 +1,52 @@
+/* frontend/src/styles/survey-mui-integration.css */
+.sv-root-modern {
+  --primary-color: #1976d2 !important;
+  --secondary-color: #f50057 !important;
+  font-family: 'Roboto', sans-serif !important;
+}
+
+.sv-btn {
+  border-radius: 4px !important;
+}
+
+.sv-footer {
+  padding: 1rem 0 !important;
+}
+
+.sv-btn--navigation {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  min-width: 100px !important;
+  padding: 8px 16px !important;
+  font-weight: 500 !important;
+}
+
+.sv-container-modern {
+  max-width: 100% !important;
+}
+
+.sv-body__page {
+  margin: 0 !important;
+  padding: 1rem !important;
+}
+
+.sv-question__title {
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  color: rgba(0, 0, 0, 0.87) !important;
+}
+
+.sv-item__control-label {
+  font-size: 1rem !important;
+}
+
+/* 修改选项样式 */
+.sv-item {
+  padding: 10px 0 !important;
+}
+
+/* 修改表单背景 */
+.sv-root-modern {
+  background: transparent !important;
+  box-shadow: none !important;
+}
