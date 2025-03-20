@@ -20,7 +20,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-
 app = Flask(__name__)
 CORS(app)
 init_database()  # 初始化数据库
@@ -254,6 +253,7 @@ def get_analysis(analysis_id):
         return jsonify({"error": "分析结果不存在"}), 404
     except Exception as e:
         logger.error(f"获取分析结果失败: {str(e)}")
+
         return jsonify({"error": str(e)}), 500
 
 

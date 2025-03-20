@@ -1,5 +1,8 @@
 #!/bin/bash
 
+http://127.0.0.1:5000
+
+# ----------------------
 # 定义前后端目录
 FRONTEND_DIR="D:\大三下\软件工程\auto_quiz1\frontend"
 BACKEND_DIR="D:\大三下\软件工程\auto_quiz1\backend"

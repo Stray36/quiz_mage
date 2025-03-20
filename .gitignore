@@ -1,7 +1,6 @@
 quiz/
 frontend/node_modules/
 frontend/src/data/
-backend/.env
 docker-compose.yml
 Dockerfile.backend
 Dockerfile.frontend
