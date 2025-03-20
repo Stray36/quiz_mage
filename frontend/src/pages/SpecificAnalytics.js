@@ -24,6 +24,11 @@ import SchoolIcon from '@mui/icons-material/School';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getAnalysisById } from '../services/api';
 
+const getQueryParam = (param) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+};
+
 export function SpecificAnalyticsPage() {
   const { analysisId } = useParams();
   const history = useHistory();
@@ -80,7 +85,10 @@ export function SpecificAnalyticsPage() {
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <Button 
           startIcon={<ArrowBackIcon />} 
-          onClick={() => history.push('/analytics')}
+          
+          onClick={() => {
+            let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
+            history.push(`/analytics?sno=${sno}`)} }
           sx={{ mr: 2 }}
         >
           返回列表

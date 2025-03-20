@@ -21,6 +21,11 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { getQuizzes } from '../services/api';
 import { format } from 'date-fns';
 
+const getQueryParam = (param) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+};
+
 export function QuizHistoryPage() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +49,10 @@ export function QuizHistoryPage() {
   }, []);
 
   const handleStartQuiz = (quizId) => {
-    history.push(`/survey/${quizId}`);
+    let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
+    console.log("sno:", sno, typeof sno); // 这里检查 sno 是否是字符串
+    history.push(`/survey/${quizId}?sno=${sno}`);
+    // history.push(`/survey/${quizId}`);
   };
 
   // 格式化日期

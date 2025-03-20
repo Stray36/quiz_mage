@@ -96,9 +96,14 @@ def preview_pdf():
         logger.error(f"生成PDF预览失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/generate-quiz', methods=['POST'])
 def create_quiz():
     try:
+        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        if not sno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+
         # 获取上传的文件
         if 'file' not in request.files:
             return jsonify({"error": "未上传文件"}), 400
@@ -146,17 +151,21 @@ def create_quiz():
         # 保存到数据库
         file_name = file.filename
         title = f"{file_name} - {difficulty}难度 ({question_count}题)"
-        quiz_id = save_quiz(title, file_name, quiz_json, question_count, difficulty)
+        quiz_id = save_quiz(sno, title, file_name, quiz_json, question_count, difficulty)
         
         return jsonify({"success": True, "quiz_id": quiz_id}), 200
     except Exception as e:
         logger.error(f"生成测验失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/analyze-quiz', methods=['POST'])
 @with_retry(max_retries=3, backoff_factor=0.5)
 def analyze_quiz():
     try:
+        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        if not sno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
         # 获取用户答案和测验ID
         data = request.json
         if not data or 'answers' not in data:
@@ -177,7 +186,7 @@ def analyze_quiz():
         
         # 保存分析结果到数据库
         if quiz_id:
-            analysis_id = save_analysis(quiz_id, result)
+            analysis_id = save_analysis(sno, quiz_id, result)
             result["analysis_id"] = analysis_id
         
         return jsonify(result), 200
@@ -186,21 +195,30 @@ def analyze_quiz():
         logger.error(f"测验分析错误: {str(e)}")
         return jsonify({"error": f"测验分析失败: {str(e)}"}), 500
 
+
 @app.route('/quizzes', methods=['GET'])
 def get_quizzes():
     """获取所有测验"""
-    try:
-        quizzes = get_all_quizzes()
+    try:        
+        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        if not sno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+
+        quizzes = get_all_quizzes(sno)
         return jsonify(quizzes), 200
     except Exception as e:
         logger.error(f"获取测验列表失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/quizzes/<int:quiz_id>', methods=['GET'])
 def get_quiz(quiz_id):
     """获取指定ID的测验"""
     try:
-        quiz = get_quiz_by_id(quiz_id)
+        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        if not sno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+        quiz = get_quiz_by_id(sno, quiz_id)
         if quiz:
             return jsonify(quiz), 200
         return jsonify({"error": "测验不存在"}), 404
@@ -208,27 +226,36 @@ def get_quiz(quiz_id):
         logger.error(f"获取测验失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/analyses', methods=['GET'])
 def get_analyses():
     """获取所有分析结果"""
     try:
-        analyses = get_all_analyses()
+        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        if not sno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+        analyses = get_all_analyses(sno)
         return jsonify(analyses), 200
     except Exception as e:
         logger.error(f"获取分析列表失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+
 @app.route('/analyses/<int:analysis_id>', methods=['GET'])
 def get_analysis(analysis_id):
     """获取指定ID的分析结果"""
     try:
-        analysis = get_analysis_by_id(analysis_id)
+        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        if not sno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+        analysis = get_analysis_by_id(sno, analysis_id)
         if analysis:
             return jsonify(analysis), 200
         return jsonify({"error": "分析结果不存在"}), 404
     except Exception as e:
         logger.error(f"获取分析结果失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)
