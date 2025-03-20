@@ -176,7 +176,7 @@ def analyze_quiz():
         # 分析结果
         if quiz_id:
             # 从数据库获取测验
-            quiz = get_quiz_by_id(quiz_id)
+            quiz = get_quiz_by_id(sno, quiz_id)
             if not quiz:
                 return jsonify({"error": "测验不存在"}), 404
             result = analyze_quiz_results(data['answers'], quiz['quiz_json'])

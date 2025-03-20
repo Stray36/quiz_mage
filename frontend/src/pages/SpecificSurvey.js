@@ -14,6 +14,11 @@ function onValueChanged(_, options) {
   console.log("New value: " + options.value);
 }
 
+const getQueryParam = (param) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+};
+
 export function SpecificSurveyPage() {
   const { quizId } = useParams();
   const history = useHistory();
@@ -80,8 +85,9 @@ export function SpecificSurveyPage() {
         
         // 延迟跳转，给用户足够时间阅读完成信息
         setTimeout(() => {
+          let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
           // 跳转到特定分析页面
-          history.push(`/analytics/${result.analysis_id}`);
+          history.push(`/analytics/${result.analysis_id}?sno=${sno}`);
         }, 3000); // 3秒后跳转
         
       } catch (error) {

@@ -91,6 +91,10 @@ def update_survey_json(quiz_json):
     """更新测验JSON文件"""
     survey_json_path = "../frontend/src/data/survey_json.js"
     try:
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(survey_json_path), exist_ok=True)
+        
+        # Write the JSON data to the file
         with open(survey_json_path, 'w', encoding='utf-8') as f:
             f.write(f"export const json = {json.dumps(quiz_json, indent=2, ensure_ascii=False)};")
         logger.info(f"成功更新测验JSON文件: {survey_json_path}")
