@@ -7,7 +7,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-DB_FILE = "quiz.db"
+DB_FILE = "merged_database.db"
 
 def init_database():
     """初始化数据库，创建必要的表"""

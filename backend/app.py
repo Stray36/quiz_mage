@@ -31,7 +31,7 @@ from flask_sqlalchemy import SQLAlchemy
 config.init_configuration()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///merged_database.db'
 
 
 # 初始化扩展

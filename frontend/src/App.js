@@ -19,6 +19,7 @@ import { AnalyticsPage } from "./pages/Analytics";
 import { AnalyticsHistoryPage } from "./pages/AnalyticsHistory";
 import { SpecificSurveyPage } from "./pages/SpecificSurvey";
 import { SpecificAnalyticsPage } from "./pages/SpecificAnalytics";
+import { TeacherHome } from "./TeacherPages/TeacherHome";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -52,8 +53,54 @@ const theme = createTheme({
 
 function App() {
   const sno = getQueryParam("sno"); // 获取学号
+  const tno = getQueryParam("tno"); // 获取教师号
 
-  return (
+  if (tno) return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <div>
+          <AppBar position="static" color="primary">
+            <Toolbar>
+              <SchoolIcon sx={{ mr: 2 }} />
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                Auto Quiz Generator
+              </Typography>
+              <Button color="inherit" component={Link} to={`/?tno=${tno}`}>
+                首页
+              </Button>
+              {/* <Button color="inherit" component={Link} to={`/survey?sno=${sno}`}>
+                测验
+              </Button>
+              <Button color="inherit" component={Link} to={`/analytics?sno=${sno}`}>
+                分析
+              </Button>
+              <Button color="inherit" component={Link} to={`/export?sno=${sno}`}>
+                导出
+              </Button> */}
+              <Button color="inherit" onClick={() => (window.location.href = `http://127.0.0.1:5000/teacher/${tno}`)}>
+                回到课程系统
+              </Button>
+            </Toolbar>
+          </AppBar>
+
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Box sx={{ py: 2 }}>
+              <Switch>
+                {/* <Route path="/survey/:quizId" render={(props) => <SpecificSurveyPage {...props} sno={sno} />} />
+                <Route path="/survey" render={(props) => <QuizHistoryPage {...props} sno={sno} />} />
+                <Route path="/analytics/:analysisId" render={(props) => <SpecificAnalyticsPage {...props} sno={sno} />} />
+                <Route path="/analytics" render={(props) => <AnalyticsHistoryPage {...props} sno={sno} />} />
+                <Route path="/export" render={(props) => <ExportToPDFPage {...props} sno={sno} />} /> */}
+                <Route path="/" render={(props) => <TeacherHome {...props} tno={tno} />} />
+              </Switch>
+            </Box>
+          </Container>
+        </div>
+      </BrowserRouter>
+    </ThemeProvider>
+  );
+  else return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>

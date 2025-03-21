@@ -7,6 +7,13 @@
     {{ render_nav_item('teacher_bp.teacher_course', '个人课程', tno=tno) }}
     {{ render_nav_item('teacher_bp.teacher_score', '班级正确率查询', tno=tno) }}
     {{ render_nav_item('login_bp.index', '退出登录') }}
+
+    <li class="nav-item">
+        <a class="nav-link" href="http://localhost:3000/?tno={{ tno }}" target="_blank">
+            进入答题系统
+        </a>
+    </li>
+
 {% endblock %}
 
 {% block content %}
