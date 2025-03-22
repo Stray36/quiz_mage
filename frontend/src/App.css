@@ -1,0 +1,90 @@
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+}
+
+.app-content {
+  height: calc(100vh - 80px);
+  overflow-y: auto;
+}
+
+h1,
+h1+span {
+  padding: 0 20px;
+}
+
+.jumbotron ul {
+  font-size: 21px;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.analytics-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.summary-section {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.summary-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.stat-item {
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px;
+  flex: 1;
+  min-width: 120px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-label {
+  font-weight: bold;
+  display: block;
+}
+
+.stat-value {
+  font-size: 1.5em;
+  color: #2c3e50;
+}
+
+.question-card {
+  background-color: #fff;
+  border-left: 4px solid #e74c3c;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.correct-option {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.knowledge-analysis {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 30px;
+}
+
+.analysis-content {
+  line-height: 1.6;
+}

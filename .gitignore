@@ -1,0 +1,8 @@
+quiz/
+frontend/node_modules/
+frontend/src/data/
+docker-compose.yml
+Dockerfile.backend
+Dockerfile.frontend
+.github/
+backend/__pycache__/
