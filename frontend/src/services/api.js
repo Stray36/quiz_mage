@@ -82,6 +82,29 @@ export const getAnalyses = async () => {
   }
 };
 
+export const getTeacherAnalyses = async () => {
+  try {
+    const tno = getTno();
+    const response = await api.get(`/analyses?tno=${tno}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching analyses:', error);
+    throw error;
+  }
+}
+
+export const getHomework = async () => {
+  try {
+    const tno = getTno();
+    const response = await api.get(`/homework?tno=${tno}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching homework:', error);
+    throw error;
+  }
+}
+
 // 获取指定 ID 的分析结果
 export const getAnalysisById = async (analysisId) => {
   try {
@@ -148,7 +171,6 @@ export const getPdfPreview = async (file) => {
 export default api;
 
 
-// 获取学号（优先从 URL 获取，如果没有，则从 localStorage 获取）
 const getTno = () => {
   let tno = getQueryParam('tno'); // 尝试从 URL 获取学号
   if (!tno) {
@@ -156,7 +178,6 @@ const getTno = () => {
   }
   return tno;
 };
-
 
 
 // 生成测验（将 sno 作为 URL 参数，而不是 FormData 传递）
@@ -170,3 +191,14 @@ export const generateQuiz4teacher = async (formData) => {
     throw error;
   }
 };
+
+export const getErrorRates = async () => {
+  try {
+    const tno = getTno();
+    const response = await api.get(`/error-rates?tno=${tno}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching error rates:', error);
+    throw error;
+  }
+}

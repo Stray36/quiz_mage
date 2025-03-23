@@ -21,6 +21,11 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import { getQuizzes } from '../services/api';
 import { format } from 'date-fns';
 
+const getQueryParam = (param) => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+};
+
 export function QuizHistoryPage() {
   const [quizzes, setQuizzes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,7 +49,9 @@ export function QuizHistoryPage() {
   }, []);
 
   const handleStartQuiz = (quizId) => {
-    history.push(`/survey/${quizId}`);
+    let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
+    console.log("sno:", sno, typeof sno); // 这里检查 sno 是否是字符串
+    history.push(`/survey/${quizId}?sno=${sno}`);
   };
 
   // 格式化日期
@@ -131,13 +138,13 @@ export function QuizHistoryPage() {
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: 'text.secondary' }}>
                           <FolderIcon fontSize="small" sx={{ mr: 1 }} />
                           <Typography variant="body2">
-                            文件名: {quiz.file_name}
+                            课程名: {quiz.cname}
                           </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: 'text.secondary' }}>
                           <AccessTimeIcon fontSize="small" sx={{ mr: 1 }} />
                           <Typography variant="body2">
-                            创建时间: {formatDate(quiz.created_at)}
+                            测验ID: {quiz.id}
                           </Typography>
                         </Box>
                         <Box sx={{ mt: 1 }}>

@@ -55,9 +55,9 @@ export function TeacherQuizHistoryPage() {
 
     const fetchClasses = async () => {
       try {
-        const data = await getClasses(); // 假设后端提供此 API
+        const data = await getClasses();
         console.log("获取班级列表成功:", data);
-        setClasses(data); // 假设返回的班级数据是 { classes: [...] }
+        setClasses(data); 
       } catch (error) {
         console.error("获取班级列表失败:", error);
       }
@@ -71,7 +71,6 @@ export function TeacherQuizHistoryPage() {
     let tno = getQueryParam('tno'); // 尝试从 URL 获取学号
     console.log("tno:", tno, typeof tno); // 这里检查 tno 是否是字符串
     history.push(`/survey/${quizId}?tno=${tno}`);
-    // history.push(`/survey/${quizId}`);
   };
 
   const handlePublishQuiz = async (quizId, cno) => {

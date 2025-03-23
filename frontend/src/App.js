@@ -19,8 +19,11 @@ import { AnalyticsPage } from "./pages/Analytics";
 import { AnalyticsHistoryPage } from "./pages/AnalyticsHistory";
 import { SpecificSurveyPage } from "./pages/SpecificSurvey";
 import { SpecificAnalyticsPage } from "./pages/SpecificAnalytics";
+
 import { TeacherHome } from "./TeacherPages/TeacherHome";
 import { TeacherQuizHistoryPage } from "./TeacherPages/TeacherQuizHistory"; 
+import { HomeworkPage }  from "./TeacherPages/HomeworkAnalytics";
+import { TeacherAnalyticsPage } from "./TeacherPages/TeacherAnalytics";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -73,10 +76,10 @@ function App() {
               <Button color="inherit" component={Link} to={`/survey?tno=${tno}`}>
                 测验历史
               </Button>
-              <Button color="inherit" component={Link} to={`/analytics?tno=${tno}`}>
+              {/* <Button color="inherit" component={Link} to={`/analytics?tno=${tno}`}>
                 测验分析
-              </Button>
-              <Button color="inherit" component={Link} to={`/analytics?tno=${tno}`}>
+              </Button> */}
+              <Button color="inherit" component={Link} to={`/HWanalytics?tno=${tno}`}>
                 作业分析
               </Button>
               <Button color="inherit" component={Link} to={`/export?tno=${tno}`}>
@@ -93,9 +96,10 @@ function App() {
               <Switch>
                 <Route path="/survey/:quizId" render={(props) => <SpecificSurveyPage {...props} tno={tno} />} />
                 <Route path="/survey" render={(props) => <TeacherQuizHistoryPage {...props} tno={tno} />} />
-                <Route path="/analytics/:analysisId" render={(props) => <SpecificAnalyticsPage {...props} sno={sno} />} />
-                <Route path="/analytics" render={(props) => <AnalyticsHistoryPage {...props} sno={sno} />} />
-                <Route path="/export" render={(props) => <ExportToPDFPage {...props} sno={sno} />} />
+                <Route path="/analytics/:analysisId" render={(props) => <TeacherAnalyticsPage {...props} tno={tno} />} />
+                <Route path="/HWanalytics" render={(props) => <HomeworkPage {...props} tno={tno} />} />
+                <Route path="/HWanalytics/:analysisId" render={(props) => <SpecificHomeworkPage {...props} sno={sno} />} />
+                <Route path="/export" render={(props) => <ExportToPDFPage {...props} tno={tno} />} />
                 <Route path="/" render={(props) => <TeacherHome {...props} tno={tno} />} />
               </Switch>
             </Box>

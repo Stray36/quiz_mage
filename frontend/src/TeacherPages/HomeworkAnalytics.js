@@ -20,7 +20,7 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 //import getSno from '../services/api';
-import { getTeacherAnalyses } from '../services/api';
+import { getErrorRates, getHomework } from '../services/api';
 import { format } from 'date-fns';
 
 const getQueryParam = (param) => {
@@ -28,17 +28,18 @@ const getQueryParam = (param) => {
   return urlParams.get(param);
 };
 
-export function TeacherAnalyticsPage() {
-  const [analyses, setAnalyses] = useState([]);
+export function HomeworkPage() {
+  const [homework, setHomework] = useState([]);
+  const [errorRates, setErrorRates] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const history = useHistory();
 
   useEffect(() => {
-    const fetchAnalyses = async () => {
+    const fetchHomework = async () => {
       try {
-        const data = await getTeacherAnalyses();
-        setAnalyses(data);
+        const data = await getHomework();
+        setHomework(data);
         setLoading(false);
       } catch (error) {
         console.error("获取分析历史失败:", error);
@@ -47,13 +48,24 @@ export function TeacherAnalyticsPage() {
       }
     };
 
-    fetchAnalyses();
+    // const fetchErrorRates = async () => {
+    //   try {
+    //     let tno = getQueryParam('tno'); 
+    //     const data = await getErrorRates(tno);
+    //     setErrorRates(data);
+    //   } catch (error) {
+    //     console.error("获取错题率失败:", error);
+    //     setError("无法加载错题率。请稍后再试或联系管理员。");
+    //   }
+    // }
+  
+    fetchHomework();
+    //fetchErrorRates();
   }, []);
 
   const handleViewAnalysis = (analysisId) => {
-    let sno = getQueryParam('tno'); // 尝试从 URL 获取学号
-    console.log("tno:", tno, typeof tno); // 这里检查 sno 是否是字符串
-    history.push(`/analytics/${analysisId}?sno=${sno}`);
+    let tno = getQueryParam('tno'); 
+    history.push(`/HWanalytics/${analysisId}tno=${tno}`);
     // history.push(`/analytics/${analysisId}`);
   };
 
@@ -71,7 +83,7 @@ export function TeacherAnalyticsPage() {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
         <CircularProgress />
-        <Typography variant="h6" sx={{ ml: 2 }}>正在加载分析历史...</Typography>
+        <Typography variant="h6" sx={{ ml: 2 }}>正在加载作业分析历史...</Typography>
       </Box>
     );
   }
@@ -87,14 +99,14 @@ export function TeacherAnalyticsPage() {
   return (
     <Box sx={{ maxWidth: 1000, mx: 'auto', p: 2 }}>
       <Typography variant="h4" component="h1" align="center" sx={{ mb: 4 }}>
-        分析历史
+        学生作业分析
       </Typography>
 
       <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
-        {analyses.length > 0 ? (
+        {homework.length > 0 ? (
           <List>
-            {analyses.map((analysis, index) => (
-              <React.Fragment key={analysis.id}>
+            {homework.map((homework, index) => (
+              <React.Fragment key={homework.id}>
                 {index > 0 && <Divider component="li" />}
                 <ListItem 
                   alignItems="flex-start" 
@@ -109,12 +121,12 @@ export function TeacherAnalyticsPage() {
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <Typography variant="h6">
-                          {analysis.quiz_title}
+                          {homework.cname}
                         </Typography>
                         <Tooltip title="查看分析">
                           <IconButton 
                             color="primary" 
-                            onClick={() => handleViewAnalysis(analysis.id)}
+                            onClick={() => handleViewAnalysis(homework.qid)}
                             sx={{ 
                               bgcolor: 'primary.light', 
                               color: 'white',
@@ -131,15 +143,10 @@ export function TeacherAnalyticsPage() {
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: 'text.secondary' }}>
                           <DescriptionIcon fontSize="small" sx={{ mr: 1 }} />
                           <Typography variant="body2">
-                            文件名: {analysis.file_name}
+                            测验ID: {homework.qid}
                           </Typography>
                         </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: 'text.secondary' }}>
-                          <AccessTimeIcon fontSize="small" sx={{ mr: 1 }} />
-                          <Typography variant="body2">
-                            分析时间: {formatDate(analysis.created_at)}
-                          </Typography>
-                        </Box>
+                        {}
                         <Box sx={{ mt: 1 }}>
                           <Chip 
                             label="分析报告" 

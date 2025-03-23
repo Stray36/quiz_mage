@@ -10,7 +10,8 @@ import config
 from quiz_service import generate_quiz, update_survey_json
 from file_service import extract_text_from_pdf,generate_pdf_previews
 from analysis_service import analyze_quiz_results
-from db_service import init_database, save_quiz, save_analysis, get_quiz_by_id, get_analysis_by_id, get_all_quizzes, get_all_quizzes4teacher, get_all_analyses, get_all_classes, insert_homework
+# from db_service import init_database, save_quiz, save_analysis, get_quiz_by_id, get_analysis_by_id, get_all_quizzes, get_all_quizzes4teacher, get_all_analyses, get_all_classes, insert_homework
+from db_service import *
 
 # 配置日志
 logging.basicConfig(
@@ -175,6 +176,7 @@ def create_quiz():
 def analyze_quiz():
     try:
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        
         if not sno:
             return jsonify({"error": "缺少 sno 参数"}), 400
         # 获取用户答案和测验ID
@@ -183,14 +185,15 @@ def analyze_quiz():
             return jsonify({"error": "没有提供答案"}), 400
         
         quiz_id = data.get('quiz_id')
-        
+        print("quiz_id:", quiz_id)
         # 分析结果
         if quiz_id:
             # 从数据库获取测验
-            quiz = get_quiz_by_id(sno, quiz_id)
+            quiz = get_quiz_by_id(quiz_id)
             if not quiz:
                 return jsonify({"error": "测验不存在"}), 404
             result = analyze_quiz_results(data['answers'], quiz['quiz_json'])
+            print("result:", result)
         else:
             # 从本地文件分析（兼容旧版本）
             result = analyze_quiz_results(data['answers'])
@@ -262,35 +265,44 @@ def publish_quiz(quiz_id):
 
 
 
-
 @app.route('/quizzes/<int:quiz_id>', methods=['GET'])
 def get_quiz(quiz_id):
     """获取指定ID的测验"""
     try:
         # print("get_quiz")
-        sno = request.args.get('sno')  # 从 URL 参数获取 sno
-        if not sno:
-            return jsonify({"error": "缺少 sno 参数"}), 400
-        quiz = get_quiz_by_id(sno, quiz_id)
+        # sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        # if not sno:
+        #     return jsonify({"error": "缺少 sno 参数"}), 400
+        quiz = get_quiz_by_id(quiz_id)
+        print(quiz)
         if quiz:
             return jsonify(quiz), 200
         return jsonify({"error": "测验不存在"}), 404
     except Exception as e:
-        logger.error(f"获取测验失败: {str(e)}")
+        logger.error(f"获取测验失败1: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
+    
 
 @app.route('/analyses', methods=['GET'])
 def get_analyses():
-    """获取所有分析结果"""
-    try:
+    """获取所有测验"""
+    try:        
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
-        if not sno:
-            return jsonify({"error": "缺少 sno 参数"}), 400
-        analyses = get_all_analyses(sno)
-        return jsonify(analyses), 200
+        tno = request.args.get('tno')
+
+        if not sno and not tno:
+            print("缺少 sno/tno 参数")
+            return jsonify({"error": "缺少 sno tno参数"}), 400
+        if sno:
+            print("sno")
+            quizzes = get_all_analyses(sno)
+        else:
+            print("tno")
+            quizzes = get_teacher_analyses(tno)
+            print(quizzes)
+        return jsonify(quizzes), 200
     except Exception as e:
-        logger.error(f"获取分析列表失败: {str(e)}")
+        logger.error(f"获取测验列表失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 
@@ -311,6 +323,34 @@ def get_analysis(analysis_id):
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/homework', methods=['GET'])
+def get_Homework():
+    try:
+        tno = request.args.get('tno')
+        if not tno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+        homeworks = get_homeworks_teacher(tno)
+        print(homeworks)
+        return jsonify(homeworks), 200
+    except Exception as e:
+        logger.error(f"获取作业列表失败: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/error-rates', methods=['GET'])
+def get_error_rates(tno):
+    try:
+        tno = request.args.get('tno')  
+        if not tno:
+            return jsonify({"error": "缺少 tno 参数"}), 400
+        error_rates = get_course_quiz_error_rates(tno)
+        if error_rates:
+            return jsonify(error_rates), 200
+        return jsonify({"error": "分析结果不存在"}), 404
+    except Exception as e:
+        logger.error(f"获取分析结果失败: {str(e)}")
+
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
