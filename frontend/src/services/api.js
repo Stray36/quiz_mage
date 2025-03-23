@@ -45,6 +45,19 @@ export const getQuizzes = async () => {
   }
 };
 
+// 获取所有班级
+export const getClasses = async () => {
+  try {
+    const tno = getTno();
+    const response = await api.get(`/classes?tno=${tno}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching classes:', error);
+    throw error;
+  }
+}
+
 // 获取指定 ID 的测验
 export const getQuizById = async (quizId) => {
   try {
@@ -93,6 +106,17 @@ export const generateQuiz = async (formData) => {
   }
 };
 
+
+export const publishQuiz = async (quizId, cno) => {
+  try {
+    const response = await api.post(`/quizzes/${quizId}/publish`, { cno });
+    return response.data;
+  } catch (error) {
+    console.error('Error publishing quiz:', error);
+    throw error;
+  }
+}
+
 // 分析测验
 export const analyzeQuiz = async (answers, quizId) => {
   try {
@@ -132,6 +156,8 @@ const getTno = () => {
   }
   return tno;
 };
+
+
 
 // 生成测验（将 sno 作为 URL 参数，而不是 FormData 传递）
 export const generateQuiz4teacher = async (formData) => {

@@ -267,3 +267,56 @@ def get_all_analyses(sno):
     finally:
         if conn:
             conn.close()
+
+def get_all_classes(tno):
+    try:
+        # 连接数据库
+        with sqlite3.connect(DB_FILE) as conn:
+            conn.row_factory = sqlite3.Row  # 使用字典形式访问行
+            cursor = conn.cursor()
+
+            # 执行查询
+            cursor.execute('''
+                SELECT cno, cname 
+                FROM course 
+                WHERE tno = ?
+            ''', (tno,))
+            courses = cursor.fetchall()
+
+            # 提取 {cno: cname} 字典
+            course_dict = [dict(course) for course in courses]
+
+            if not course_dict:
+                logger.warning(f"教师号 {tno} 没有教授任何课程")
+            
+            return course_dict
+
+    except Exception as e:
+        logger.error(f"查询失败: {str(e)}")
+        raise
+
+    
+def insert_homework(cno, qid):
+    try:
+        with sqlite3.connect(DB_FILE) as conn:
+            cursor = conn.cursor()
+
+            # 执行插入操作
+            cursor.execute('''
+                INSERT INTO homework (cno, qid)
+                VALUES (?, ?)
+            ''', (cno, qid))
+
+            # 获取新插入记录的主键 ID
+            new_id = cursor.lastrowid
+
+            # 提交事务
+            conn.commit()
+
+            logger.info(f"成功插入 homework 记录: cno={cno}, qid={qid}, id={new_id}")
+            return new_id
+
+    except Exception as e:
+        logger.error(f"插入 homework 数据失败: {str(e)}")
+        raise
+    

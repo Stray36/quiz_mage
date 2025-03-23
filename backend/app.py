@@ -10,7 +10,7 @@ import config
 from quiz_service import generate_quiz, update_survey_json
 from file_service import extract_text_from_pdf,generate_pdf_previews
 from analysis_service import analyze_quiz_results
-from db_service import init_database, save_quiz, save_analysis, get_quiz_by_id, get_analysis_by_id, get_all_quizzes, get_all_quizzes4teacher, get_all_analyses
+from db_service import init_database, save_quiz, save_analysis, get_quiz_by_id, get_analysis_by_id, get_all_quizzes, get_all_quizzes4teacher, get_all_analyses, get_all_classes, insert_homework
 
 # 配置日志
 logging.basicConfig(
@@ -225,17 +225,49 @@ def get_quizzes():
         else:
             print("tno")
             quizzes = get_all_quizzes4teacher(tno)
+            print(quizzes)
         return jsonify(quizzes), 200
     except Exception as e:
         logger.error(f"获取测验列表失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 
+@app.route('/classes', methods=['GET'])
+def get_classes():
+    """获取所有班级"""
+    try:
+        tno = request.args.get('tno')  # 从 URL 参数获取 sno
+        print("getClasses:", tno)
+        if not tno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+        classes = get_all_classes(tno)
+        print("classes:", classes)
+        return jsonify(classes), 200
+    except Exception as e:
+        logger.error(f"获取班级列表失败: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+    
+
+@app.route('/quizzes/<int:quiz_id>/publish', methods=['POST'])
+def publish_quiz(quiz_id):
+    # 获取请求体中的班级编号
+    data = request.get_json()
+    cno = data.get('cno')
+    insert_homework(cno, quiz_id)
+
+    if not cno:
+        return jsonify({"error": "缺少 cno 参数"}), 400
+
+    return jsonify({"success": True, "message": "测验发布成功", "quiz_id": quiz_id, "class_id": cno}), 200
+
+
+
+
 @app.route('/quizzes/<int:quiz_id>', methods=['GET'])
 def get_quiz(quiz_id):
     """获取指定ID的测验"""
     try:
-        print("get_quiz")
+        # print("get_quiz")
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
         if not sno:
             return jsonify({"error": "缺少 sno 参数"}), 400
@@ -277,6 +309,8 @@ def get_analysis(analysis_id):
         logger.error(f"获取分析结果失败: {str(e)}")
 
         return jsonify({"error": str(e)}), 500
+
+
 
 
 if __name__ == "__main__":

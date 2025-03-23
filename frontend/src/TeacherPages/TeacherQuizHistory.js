@@ -23,7 +23,7 @@ import {
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import FolderIcon from '@mui/icons-material/Folder';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { getQuizzes } from '../services/api';
+import { getQuizzes, getClasses, publishQuiz } from '../services/api';
 import { format } from 'date-fns';
 
 
@@ -55,8 +55,9 @@ export function TeacherQuizHistoryPage() {
 
     const fetchClasses = async () => {
       try {
-        const response = await axios.get("/api/teacher/classes"); // 假设后端提供此 API
-        setClasses(response.data.classes); // 假设返回的班级数据是 { classes: [...] }
+        const data = await getClasses(); // 假设后端提供此 API
+        console.log("获取班级列表成功:", data);
+        setClasses(data); // 假设返回的班级数据是 { classes: [...] }
       } catch (error) {
         console.error("获取班级列表失败:", error);
       }
@@ -72,6 +73,17 @@ export function TeacherQuizHistoryPage() {
     history.push(`/survey/${quizId}?tno=${tno}`);
     // history.push(`/survey/${quizId}`);
   };
+
+  const handlePublishQuiz = async (quizId, cno) => {
+    if (!cno) {
+      alert("请选择一个班级后再发布测验！");
+      return;
+    }
+      const response = await publishQuiz(quizId, cno);
+      console.log("发布测验成功:", response);
+      alert(`测验发布成功！班级编号: ${cno}`);
+  };
+
 
   // 格式化日期
   const formatDate = (dateString) => {
@@ -137,6 +149,7 @@ export function TeacherQuizHistoryPage() {
                         <Typography variant="h6">
                           {quiz.title}
                         </Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Tooltip title="开始测验">
                           <IconButton 
                             color="primary" 
@@ -144,12 +157,14 @@ export function TeacherQuizHistoryPage() {
                             sx={{ 
                               bgcolor: 'primary.light', 
                               color: 'white',
-                              '&:hover': { bgcolor: 'primary.main' } 
+                              '&:hover': { bgcolor: 'primary.main' }
                             }}
                           >
                             <PlayArrowIcon />
                           </IconButton>
                         </Tooltip>
+
+                        </Box>
                       </Box>
                     }
                     secondary={
@@ -181,8 +196,9 @@ export function TeacherQuizHistoryPage() {
                             variant="outlined"
                           />
                         </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
 
-                        <FormControl fullWidth size="small" sx={{ mt: 2 }}>
+                        <FormControl fullWidth size="small" sx={{ mt: 2, width: '25%' }}>
                           <InputLabel>选择班级</InputLabel>
                           <Select
                             value={quizClassSelections[quiz.id] || ""} // 获取当前测验的班级选择
@@ -195,14 +211,22 @@ export function TeacherQuizHistoryPage() {
                             label="选择班级"
                           >
                             {classes.map((classItem) => (
-                              <MenuItem key={classItem.id} value={classItem.id}>
-                                {classItem.name}
+                              <MenuItem key={classItem.cno} value={classItem.cno}>
+                                {classItem.cname}
                               </MenuItem>
                             ))}
                           </Select>
                         </FormControl>
-                        
-
+                        <Button 
+                            variant="contained" 
+                            color="secondary" 
+                            size="small" 
+                            sx={{ ml: 80 }} // 添加左侧间距
+                            onClick={() => handlePublishQuiz(quiz.id, quizClassSelections[quiz.id])} // 发布测验的处理函数
+                        >
+                            发布
+                        </Button>
+                        </Box>
                       </Box>
                     }
                   />
