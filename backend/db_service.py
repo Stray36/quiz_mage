@@ -3,6 +3,8 @@ import json
 import time
 import logging
 import os
+import jieba
+from collections import Counter
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
@@ -549,13 +551,6 @@ def insert_homework(cno, qid):
 def get_course_quiz_error_rates(tno):
     """
     统计某一门课程不同 quizid 的总体错误率和单道题目错误率。
-    
-    参数:
-        tno (str): 教师号
-    
-    返回:
-        list: 包含 {courseid, quizid, error_rate, question_error_rates} 的字典列表
-              其中 question_error_rates 是一个字典，键为题目编号（从 1 开始），值为该题目的错误率
     """
     conn = None
     try:
@@ -678,3 +673,136 @@ def get_homeworks_teacher(tno):
         raise
 
 
+def get_quiz_error_rates(quizid):
+    """
+    统计某一测验的总体错误率和单道题目错误率。
+    
+    参数:
+        quizid (str): 测验编号
+    
+    返回:
+        dict: 包含 {error_rate, question_error_rates} 的字典
+              其中 question_error_rates 是一个字典，键为题目编号（从 1 开始），值为该题目的错误率
+    """
+    conn = None
+    try:
+        # 连接数据库
+        conn = sqlite3.connect(DB_FILE)  # 替换为你的数据库文件路径
+        conn.row_factory = sqlite3.Row  # 使用字典形式访问行
+        cursor = conn.cursor()
+
+        # Step 1: 根据 quizid 查询 analysis_results 表中的 analysis_json
+        cursor.execute('''
+        SELECT analysis_json 
+        FROM analysis_results 
+        WHERE quiz_id = ?
+        ''', (quizid,))
+        analyses = cursor.fetchall()
+
+        if not analyses:
+            raise ValueError(f"测验编号 {quizid} 没有分析数据")
+
+        # Step 2: 解析 analysis_json 数据
+        total_questions = 0
+        incorrect_count = 0
+        question_errors = {}  # 记录每道题的错误次数
+
+        for analysis in analyses:
+            analysis_data = json.loads(analysis['analysis_json'])
+            total_questions = max(total_questions, analysis_data.get("totalQuestions", 0))
+            incorrect_count += analysis_data.get("incorrectCount", 0)
+
+            # 解析 errorIndex 字段
+            error_index = analysis_data.get("errorIndex", "")
+            for i, char in enumerate(error_index):
+                if char == '1':  # 如果该位为 '1'，表示该题错误
+                    question_number = i + 1  # 题目编号从 1 开始
+                    question_errors[question_number] = question_errors.get(question_number, 0) + 1
+
+        # Step 3: 计算总体错误率
+        error_rate = 0
+        if total_questions > 0:
+            error_rate = incorrect_count / total_questions
+
+        # Step 4: 计算每道题的错误率并按题目编号排序
+        question_error_rates = []
+        for question_number in sorted(question_errors.keys()):  # 按题目编号排序
+            error_count = question_errors[question_number]
+            correct_rate = 1 - (error_count / len(analyses))  # 正确率 = 1 - 错误率
+            question_error_rates.append({
+                "question": str(question_number),  # 转为字符串以适配前端需求
+                "correctRate": correct_rate
+            })
+
+        # 返回结果
+        return {
+            "error_rate": error_rate / total_questions,
+            "question_error_rates": question_error_rates
+        }
+
+    except Exception as e:
+        print(f"统计错误率失败: {str(e)}")
+        raise
+    finally:
+        if conn:
+            conn.close()
+
+
+def get_word_frequence_by_qid(qid):
+    """
+    获取指定测验的所有 knowledgeAnalysis 词频，用于制作词云图。
+    
+    参数:
+        qid (str): 测验编号
+        db_file (str): 数据库文件路径
+    
+    返回:
+        list: 包含前20个高频词的列表，每个元素是一个字典 {"text": word, "value": frequency}
+    """
+    conn = None
+    try:
+        # 连接数据库
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row  # 使用字典形式访问行
+        cursor = conn.cursor()
+
+        # Step 1: 根据 quizid 查询 analysis_results 表中的 analysis_json
+        cursor.execute('''
+        SELECT analysis_json 
+        FROM analysis_results 
+        WHERE quiz_id = ?
+        ''', (qid,))
+        analyses = cursor.fetchall()
+
+        if not analyses:
+            raise ValueError(f"测验编号 {qid} 没有分析数据")
+
+        # Step 2: 提取所有 knowledgeAnalysis 字段内容
+        all_texts = []
+        for analysis in analyses:
+            analysis_data = json.loads(analysis['analysis_json'])
+            knowledge_analysis = analysis_data.get("knowledgeAnalysis", "")
+            if knowledge_analysis:
+                all_texts.append(knowledge_analysis)
+
+        # Step 3: 合并所有文本并进行分词
+        combined_text = " ".join(all_texts)  # 将所有文本合并为一个字符串
+        words = jieba.lcut(combined_text)  # 使用 jieba 分词
+
+        # Step 4: 统计词频
+        word_counts = Counter(words)
+
+        # Step 5: 获取频率最高的20个词语
+        top20 = word_counts.most_common(20)  # 返回一个列表，每个元素是 (word, freq) 元组
+
+        # Step 6: 转换为词云图所需的格式
+        word_cloud_data = [{"text": word, "value": freq} for word, freq in top20]
+
+        return word_cloud_data
+
+    except Exception as e:
+        print(f"获取词频失败: qid={qid}, error={str(e)}")
+        raise
+    finally:
+        if conn:
+            conn.close()

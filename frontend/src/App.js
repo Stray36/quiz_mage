@@ -99,8 +99,8 @@ function App() {
                 <Route path="/survey/:quizId" render={(props) => <SpecificSurveyPage {...props} tno={tno} />} />
                 <Route path="/survey" render={(props) => <TeacherQuizHistoryPage {...props} tno={tno} />} />
                 <Route path="/analytics/:analysisId" render={(props) => <TeacherAnalyticsPage {...props} tno={tno} />} />
-                <Route path="/HWanalytics" render={(props) => <HomeworkPage {...props} tno={tno} />} />
                 <Route path="/HWanalytics/:analysisId" render={(props) => <SpecificHomeworkPage {...props} tno={tno} />} />
+                <Route path="/HWanalytics" render={(props) => <HomeworkPage {...props} tno={tno} />} />  
                 <Route path="/export" render={(props) => <ExportToPDFPage {...props} tno={tno} />} />
                 <Route path="/" render={(props) => <TeacherHome {...props} tno={tno} />} />
               </Switch>

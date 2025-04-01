@@ -352,13 +352,11 @@ def get_Homework():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route('/error-rates', methods=['GET'])
-def get_error_rates(tno):
+@app.route('/error-rates/<int:quiz_id>', methods=['GET'])
+def get_error_rates(quiz_id):
     try:
-        tno = request.args.get('tno')  
-        if not tno:
-            return jsonify({"error": "缺少 tno 参数"}), 400
-        error_rates = get_course_quiz_error_rates(tno)
+        error_rates = get_quiz_error_rates(quiz_id)
+        print("error_rates:", error_rates)
         if error_rates:
             return jsonify(error_rates), 200
         return jsonify({"error": "分析结果不存在"}), 404
@@ -366,6 +364,20 @@ def get_error_rates(tno):
         logger.error(f"获取分析结果失败: {str(e)}")
 
         return jsonify({"error": str(e)}), 500
+
+
+@app.route('/word_cloud/<int:quiz_id>', methods=['GET'])
+def get_word_cloud(quiz_id):
+    try:
+        word_cloud = get_word_frequence_by_qid(quiz_id)
+        # print(word_cloud)
+        if (word_cloud):
+            return jsonify(word_cloud), 200
+        return jsonify({"error": "词云分析结果不存在"}), 404
+    except Exception as e:
+        logger.error(f"获取分析结果失败: {str(e)}")
+
+        return jsonify({"error": str(e)}), 500  
 
 
 if __name__ == "__main__":

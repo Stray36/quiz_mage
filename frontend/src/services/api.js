@@ -204,13 +204,22 @@ export const generateQuiz4teacher = async (formData) => {
   }
 };
 
-export const getErrorRates = async () => {
+export const getErrorRates = async (quizId) => {
   try {
-    const tno = getTno();
-    const response = await api.get(`/error-rates?tno=${tno}`);
+    const response = await api.get(`/error-rates/${quizId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching error rates:', error);
+    throw error;
+  }
+}
+
+export const getWordCloud = async (quizId) => {
+  try {
+    const response = await api.get(`/word_cloud/${quizId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching error:', error);
     throw error;
   }
 }

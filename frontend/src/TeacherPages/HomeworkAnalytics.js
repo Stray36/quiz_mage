@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -51,12 +52,7 @@ export function HomeworkPage() {
 
   const handleViewAnalysis1 = (analysisId) => {
     let tno = getQueryParam('tno'); 
-    console.log(typeof(tno));
-    console.log('analysisId:', analysisId, 'tno:', tno);
     history.push(`/HWanalytics/${analysisId}?tno=${tno}`); 
-    // /HWanalytics/:analysisId"
-    console.log('yes');
-    // history.push(`/analytics/${analysisId}`);
   };
 
   // 格式化日期
