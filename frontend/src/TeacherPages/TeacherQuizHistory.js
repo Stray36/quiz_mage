@@ -56,7 +56,7 @@ export function TeacherQuizHistoryPage() {
     const fetchClasses = async () => {
       try {
         const data = await getClasses();
-        console.log("获取班级列表成功:", data);
+        // console.log("获取班级列表成功:", data);
         setClasses(data); 
       } catch (error) {
         console.error("获取班级列表失败:", error);

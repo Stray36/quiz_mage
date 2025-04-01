@@ -25,6 +25,18 @@ const getSno = () => {
 };
 
 // 获取所有测验
+export const getQuizzes_0 = async () => {
+  try {
+    const sno = getSno();
+    const response = await api.get(`/auto_quiz?sno=${sno}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching quizzes:', error);
+    throw error;
+  }
+};
+
+// 获取所有作业
 export const getQuizzes = async () => {
   try {
     const sno = getSno();
@@ -40,7 +52,7 @@ export const getQuizzes = async () => {
      }
   
   } catch (error) {
-    console.error('Error fetching quizzes:', error);
+    console.error('Error fetching homework:', error);
     throw error;
   }
 };
@@ -50,7 +62,6 @@ export const getClasses = async () => {
   try {
     const tno = getTno();
     const response = await api.get(`/classes?tno=${tno}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching classes:', error);
@@ -93,6 +104,7 @@ export const getTeacherAnalyses = async () => {
   }
 }
 
+// 获取该老师发布的作业
 export const getHomework = async () => {
   try {
     const tno = getTno();

@@ -210,9 +210,24 @@ def analyze_quiz():
         return jsonify({"error": f"测验分析失败: {str(e)}"}), 500
 
 
+@app.route('/auto_quiz', methods=['GET'])
+def get_quizzes_0():
+    """获取所有测验"""
+    try:        
+        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        if not sno:
+            return jsonify({"error": "缺少 sno 参数"}), 400
+
+        quizzes = get_all_quizzes0(sno)
+        return jsonify(quizzes), 200
+    except Exception as e:
+        logger.error(f"获取测验列表失败: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/quizzes', methods=['GET'])
 def get_quizzes():
-    """获取所有测验"""
+    """获取所有作业"""
     try:        
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
         tno = request.args.get('tno')
@@ -231,7 +246,7 @@ def get_quizzes():
             print(quizzes)
         return jsonify(quizzes), 200
     except Exception as e:
-        logger.error(f"获取测验列表失败: {str(e)}")
+        logger.error(f"获取作业列表失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 

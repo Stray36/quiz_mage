@@ -13,6 +13,7 @@ import SchoolIcon from "@mui/icons-material/School";
 import "./App.css";
 import { HomePage } from "./pages/Home";
 import { SurveyPage } from "./pages/Survey";
+import { QuizPage } from "./pages/Quiz";
 import { QuizHistoryPage } from "./pages/QuizHistory";
 import { ExportToPDFPage } from "./pages/Export";
 import { AnalyticsPage } from "./pages/Analytics";
@@ -24,6 +25,7 @@ import { TeacherHome } from "./TeacherPages/TeacherHome";
 import { TeacherQuizHistoryPage } from "./TeacherPages/TeacherQuizHistory"; 
 import { HomeworkPage }  from "./TeacherPages/HomeworkAnalytics";
 import { TeacherAnalyticsPage } from "./TeacherPages/TeacherAnalytics";
+import { SpecificHomeworkPage } from "./TeacherPages/SpecificHomework";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -98,7 +100,7 @@ function App() {
                 <Route path="/survey" render={(props) => <TeacherQuizHistoryPage {...props} tno={tno} />} />
                 <Route path="/analytics/:analysisId" render={(props) => <TeacherAnalyticsPage {...props} tno={tno} />} />
                 <Route path="/HWanalytics" render={(props) => <HomeworkPage {...props} tno={tno} />} />
-                <Route path="/HWanalytics/:analysisId" render={(props) => <SpecificHomeworkPage {...props} sno={sno} />} />
+                <Route path="/HWanalytics/:analysisId" render={(props) => <SpecificHomeworkPage {...props} tno={tno} />} />
                 <Route path="/export" render={(props) => <ExportToPDFPage {...props} tno={tno} />} />
                 <Route path="/" render={(props) => <TeacherHome {...props} tno={tno} />} />
               </Switch>
@@ -122,8 +124,11 @@ function App() {
               <Button color="inherit" component={Link} to={`/?sno=${sno}`}>
                 首页
               </Button>
+              <Button color="inherit" component={Link} to={`/quiz?sno=${sno}`}>
+                查看测验
+              </Button>
               <Button color="inherit" component={Link} to={`/survey?sno=${sno}`}>
-                测验
+                查看作业
               </Button>
               <Button color="inherit" component={Link} to={`/analytics?sno=${sno}`}>
                 分析
@@ -141,6 +146,7 @@ function App() {
             <Box sx={{ py: 2 }}>
               <Switch>
                 <Route path="/survey/:quizId" render={(props) => <SpecificSurveyPage {...props} sno={sno} />} />
+                <Route path="/quiz" render={(props) => <QuizPage {...props} sno={sno} />} />
                 <Route path="/survey" render={(props) => <QuizHistoryPage {...props} sno={sno} />} />
                 <Route path="/analytics/:analysisId" render={(props) => <SpecificAnalyticsPage {...props} sno={sno} />} />
                 <Route path="/analytics" render={(props) => <AnalyticsHistoryPage {...props} sno={sno} />} />

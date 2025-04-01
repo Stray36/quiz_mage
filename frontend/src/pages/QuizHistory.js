@@ -39,8 +39,8 @@ export function QuizHistoryPage() {
         setQuizzes(data);
         setLoading(false);
       } catch (error) {
-        console.error("获取测验历史失败:", error);
-        setError("无法加载测验历史。请稍后再试或联系管理员。");
+        console.error("获取作业历史失败:", error);
+        setError("无法加载作业历史。请稍后再试或联系管理员。");
         setLoading(false);
       }
     };
@@ -78,7 +78,7 @@ export function QuizHistoryPage() {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
         <CircularProgress />
-        <Typography variant="h6" sx={{ ml: 2 }}>正在加载测验历史...</Typography>
+        <Typography variant="h6" sx={{ ml: 2 }}>正在加载作业历史...</Typography>
       </Box>
     );
   }
@@ -94,7 +94,7 @@ export function QuizHistoryPage() {
   return (
     <Box sx={{ maxWidth: 1000, mx: 'auto', p: 2 }}>
       <Typography variant="h4" component="h1" align="center" sx={{ mb: 4 }}>
-        测验历史
+        作业历史
       </Typography>
 
       <Paper elevation={3} sx={{ p: 3, borderRadius: 2 }}>
@@ -118,7 +118,7 @@ export function QuizHistoryPage() {
                         <Typography variant="h6">
                           {quiz.title}
                         </Typography>
-                        <Tooltip title="开始测验">
+                        <Tooltip title="开始">
                           <IconButton 
                             color="primary" 
                             onClick={() => handleStartQuiz(quiz.id)}
@@ -144,7 +144,7 @@ export function QuizHistoryPage() {
                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: 'text.secondary' }}>
                           <AccessTimeIcon fontSize="small" sx={{ mr: 1 }} />
                           <Typography variant="body2">
-                            测验ID: {quiz.id}
+                            作业ID: {quiz.id}
                           </Typography>
                         </Box>
                         <Box sx={{ mt: 1 }}>
@@ -172,17 +172,17 @@ export function QuizHistoryPage() {
         ) : (
           <Box sx={{ textAlign: 'center', py: 4 }}>
             <Typography variant="h6" color="text.secondary" gutterBottom>
-              暂无测验历史
+              暂无作业历史
             </Typography>
             <Typography variant="body1" color="text.secondary" paragraph>
-              您还没有生成任何测验。点击下方按钮创建一个新的测验。
+              您还没有生成任何作业。点击下方按钮创建一个新的作业。
             </Typography>
             <Button 
               variant="contained" 
               color="primary"
               onClick={() => history.push('/')}
             >
-              创建测验
+              创建作业
             </Button>
           </Box>
         )}

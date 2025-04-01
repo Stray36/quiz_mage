@@ -216,6 +216,33 @@ def get_analysis_by_quiz_id(sno, quiz_id):
         if conn:
             conn.close()
 
+# 获取所有测验
+def get_all_quizzes0(sno):
+    """获取所有测验"""
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+        SELECT id, title, file_name, question_count, difficulty, created_at
+        FROM quizzes
+        WHERE sno = ?
+        ORDER BY created_at DESC
+        ''', (sno,))
+        
+        rows = cursor.fetchall()
+        quizzes = [dict(row) for row in rows]
+        return quizzes
+    except Exception as e:
+        logger.error(f"获取所有测验失败: {str(e)}")
+        raise
+    finally:
+        if conn:
+            conn.close()
+
+# 获取所有作业
 def get_all_quizzes(sno):
     conn = None
     try:
@@ -295,7 +322,7 @@ def get_all_quizzes(sno):
         return quizzes_with_info
 
     except Exception as e:
-        logger.error(f"获取所有测验失败: {str(e)}")
+        logger.error(f"获取所有作业失败: {str(e)}")
         raise
     finally:
         if conn:
@@ -630,9 +657,10 @@ def get_homeworks_teacher(tno):
 
             # 执行查询，获取课程编号、课程名和测验编号
             cursor.execute('''
-                SELECT h.cno, c.cname, h.qid 
+                SELECT h.cno, c.cname, h.qid, q.title 
                 FROM homework h
                 JOIN course c ON h.cno = c.cno
+                JOIN quizzes q ON h.qid = q.id
                 WHERE c.tno = ?
             ''', (tno,))
             homeworks = cursor.fetchall()
