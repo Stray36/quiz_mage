@@ -11,6 +11,9 @@ logger = logging.getLogger(__name__)
 
 DB_FILE = "merged_database.db"
 
+with open('stop_words.txt', 'r', encoding='utf-8') as f:
+    STOP_WORDS = {line.strip() for line in f if line.strip()}
+
 def init_database():
     """初始化数据库，创建必要的表"""
     conn = None
@@ -747,17 +750,9 @@ def get_quiz_error_rates(quizid):
         if conn:
             conn.close()
 
-
 def get_word_frequence_by_qid(qid):
     """
-    获取指定测验的所有 knowledgeAnalysis 词频，用于制作词云图。
-    
-    参数:
-        qid (str): 测验编号
-        db_file (str): 数据库文件路径
-    
-    返回:
-        list: 包含前20个高频词的列表，每个元素是一个字典 {"text": word, "value": frequency}
+    获取指定测验的所有 knowledgeAnalysis 词频，用于制作词云图
     """
     conn = None
     try:
@@ -766,7 +761,7 @@ def get_word_frequence_by_qid(qid):
         conn.row_factory = sqlite3.Row  # 使用字典形式访问行
         cursor = conn.cursor()
 
-        # Step 1: 根据 quizid 查询 analysis_results 表中的 analysis_json
+        # Step 1: 查询analysis_json
         cursor.execute('''
         SELECT analysis_json 
         FROM analysis_results 
@@ -777,28 +772,26 @@ def get_word_frequence_by_qid(qid):
         if not analyses:
             raise ValueError(f"测验编号 {qid} 没有分析数据")
 
-        # Step 2: 提取所有 knowledgeAnalysis 字段内容
+        # Step 2: 提取所有knowledgeAnalysis内容
         all_texts = []
         for analysis in analyses:
             analysis_data = json.loads(analysis['analysis_json'])
-            knowledge_analysis = analysis_data.get("knowledgeAnalysis", "")
-            if knowledge_analysis:
+            if knowledge_analysis := analysis_data.get("knowledgeAnalysis", ""):
                 all_texts.append(knowledge_analysis)
 
-        # Step 3: 合并所有文本并进行分词
-        combined_text = " ".join(all_texts)  # 将所有文本合并为一个字符串
-        words = jieba.lcut(combined_text)  # 使用 jieba 分词
+        # Step 3: 文本处理和分词
+        combined_text = " ".join(all_texts)
+        words = [
+            word for word in jieba.lcut(combined_text)
+            if word.strip() and word not in STOP_WORDS
+        ]
 
-        # Step 4: 统计词频
+        # Step 4: 统计词频并取Top30
         word_counts = Counter(words)
+        top20 = word_counts.most_common(40)
 
-        # Step 5: 获取频率最高的20个词语
-        top20 = word_counts.most_common(20)  # 返回一个列表，每个元素是 (word, freq) 元组
-
-        # Step 6: 转换为词云图所需的格式
-        word_cloud_data = [{"text": word, "value": freq} for word, freq in top20]
-
-        return word_cloud_data
+        # 转换为词云格式
+        return [{"text": word, "value": freq} for word, freq in top20]
 
     except Exception as e:
         print(f"获取词频失败: qid={qid}, error={str(e)}")
