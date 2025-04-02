@@ -5,7 +5,6 @@
     {{ render_nav_item('teacher_bp.profile', tno, tno=tno) }}
     {{ render_nav_item('teacher_bp.teacher_account', '个人信息', tno=tno) }}
     {{ render_nav_item('teacher_bp.teacher_course', '个人课程', tno=tno) }}
-    {{ render_nav_item('teacher_bp.teacher_score', '班级正确率查询', tno=tno) }}
     {{ render_nav_item('login_bp.index', '退出登录') }}
 
     <li class="nav-item">
@@ -16,11 +15,12 @@
 
 {% endblock %}
 
+
 {% block content %}
 <div class="container mt-4">
-    <div class="row">
+    <div class="row w-75">
         <!-- 个人信息卡片 -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h4>个人信息</h4>
@@ -35,7 +35,7 @@
         </div>
 
         <!-- 个人课程卡片 -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header">
                     <h4>个人课程</h4>
@@ -47,24 +47,6 @@
                         {% endfor %}
                     {% else %}
                         <p>您尚未教授任何课程。</p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- 班级正确率查询卡片 -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h4>班级正确率查询</h4>
-                </div>
-                <div class="card-body">
-                    {% if scores %}
-                        {% for score in scores %}
-                            <p><strong>{{ score.qname }}</strong> - 正确率：{{ score.accuracy }}</p>
-                        {% endfor %}
-                    {% else %}
-                        <p>暂无班级正确率数据。</p>
                     {% endif %}
                 </div>
             </div>

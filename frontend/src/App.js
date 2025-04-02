@@ -25,6 +25,7 @@ import { TeacherHome } from "./TeacherPages/TeacherHome";
 import { TeacherQuizHistoryPage } from "./TeacherPages/TeacherQuizHistory"; 
 import { HomeworkPage }  from "./TeacherPages/HomeworkAnalytics";
 import { TeacherAnalyticsPage } from "./TeacherPages/TeacherAnalytics";
+import { TeacherSpecificPage } from "./TeacherPages/TeacherSpecific";
 import { SpecificHomeworkPage } from "./TeacherPages/SpecificHomework";
 
 import "@fontsource/roboto/300.css";
@@ -70,7 +71,7 @@ function App() {
             <Toolbar>
               <SchoolIcon sx={{ mr: 2 }} />
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Auto Quiz Generator
+                Quiz Mage
               </Typography>
               <Button color="inherit" component={Link} to={`/?tno=${tno}`}>
                 生成测验
@@ -78,11 +79,11 @@ function App() {
               <Button color="inherit" component={Link} to={`/survey?tno=${tno}`}>
                 测验历史
               </Button>
-              {/* <Button color="inherit" component={Link} to={`/analytics?tno=${tno}`}>
-                测验分析
-              </Button> */}
+              <Button color="inherit" component={Link} to={`/analytics?tno=${tno}`}>
+                测验答案分析
+              </Button>
               <Button color="inherit" component={Link} to={`/HWanalytics?tno=${tno}`}>
-                作业分析
+                学生作业分析
               </Button>
               <Button color="inherit" component={Link} to={`/export?tno=${tno}`}>
                 导出
@@ -98,7 +99,8 @@ function App() {
               <Switch>
                 <Route path="/survey/:quizId" render={(props) => <SpecificSurveyPage {...props} tno={tno} />} />
                 <Route path="/survey" render={(props) => <TeacherQuizHistoryPage {...props} tno={tno} />} />
-                <Route path="/analytics/:analysisId" render={(props) => <TeacherAnalyticsPage {...props} tno={tno} />} />
+                <Route path="/analytics/:analysisId" render={(props) => <TeacherSpecificPage {...props} tno={tno} />} />
+                <Route path="/analytics" render={(props) => <TeacherAnalyticsPage {...props} tno={tno} />} />
                 <Route path="/HWanalytics/:analysisId" render={(props) => <SpecificHomeworkPage {...props} tno={tno} />} />
                 <Route path="/HWanalytics" render={(props) => <HomeworkPage {...props} tno={tno} />} />  
                 <Route path="/export" render={(props) => <ExportToPDFPage {...props} tno={tno} />} />

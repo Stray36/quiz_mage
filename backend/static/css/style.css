@@ -1,56 +1,114 @@
-/* static/css/style.css */
-body {
 
-    background: linear-gradient(200deg,#72afd3,#96fbc4);
-}
-
-.btn-primary:hover {
-    background-color: lightseagreen !important; /* 强制优先级 */
-    transform: scale(1.05); /* 鼠标悬停时轻微放大 */
+.btn-primary {
+    background-color: #1976d2 !important; /* 主要颜色设为蓝色 /
+    color: white !important; / 按钮文字设为白色 */
+    border-radius: 4px !important;
+    min-width: 100px !important;
+    padding: 8px 16px !important;
+    font-weight: 400px !important;
     transition: all 0.3s ease-in-out;
 }
-
-.container {
+    
+.btn-primary:hover {
+    background-color: #0056b3  !important;
+    transform: scale(1.05);
+}
+    
+    .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* 让它占满整个屏幕高度 */
-}
-
-
-.card {
-    background: rgba(255, 255, 255, 0.2); /* 更透明，制造玻璃质感 */
-    border-radius: 15px; /* 圆角 */
+    height: 100vh;
+    }
+    
+    .card {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+    }
     
-    backdrop-filter: blur(15px); /* 玻璃模糊效果 */
-    -webkit-backdrop-filter: blur(15px); /* 兼容 Safari */
+    .card:hover {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transform: scale(1.02);
+    }
     
-    border: 1px solid rgba(255, 255, 255, 0.3); /* 玻璃边框 */
+
+.btn-primary {
+    background-color: #1976d2 !important; /* 主要颜色设为蓝色 /
+    color: white !important; / 按钮文字设为白色 */
+    border-radius: 4px !important;
+    min-width: 100px !important;
+    padding: 8px 16px !important;
+    font-weight: 400px !important;
     transition: all 0.3s ease-in-out;
 }
-
-.card:hover {
-    background: rgba(255, 255, 255, 0.3); /* 悬停时更亮 */
-    backdrop-filter: blur(20px); /* 悬停时模糊更强 */
+    
+.btn-primary:hover {
+    background-color: #0056b3  !important;
+    transform: scale(1.05);
+}
+    
+    .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+    
+    .card {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+    }
+    
+    .card:hover {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    transform: scale(1.02); /* 轻微放大 */
-}
+    transform: scale(1.02);
+    }
+    
+    .navbar {
+        background: #1976d2 !important; /* 导航栏设为蓝色 /
+        color: white !important; / 字体颜色设为白色 */
+        height: 65px; /* 调整导航栏高度，例如80px */
+        padding: 10px 20px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3); /* 添加底部阴影*/
+        transition: all 0.4s ease-in-out !important;
+    }
+        
+    .navbar a {
+        color: white !important; /* 导航栏链接字体颜色 */
 
-.navbar {
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0)) !important;
-    transition: all 0.4s ease-in-out !important;
-    padding: 10px 20px;
-    box-shadow: none;
-}
-.navbar:hover {
-    background: rgba(255, 255, 255, 0.3) !important; /* 悬停时更明显 */
-    backdrop-filter: blur(12px) !important; /* 增强模糊 */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important; /* 添加轻微阴影，增加立体感 */
-    transform: translateY(-2px); /* 轻微上移，增加动态感 */
-}
+        text-decoration: none;
+    }
+    
 
-h2 {
-    color: #007bff;
-}
+    h2 {
+    color: #1976d2;
+    }
+    
+    
+        
+    .navbar a {
+        color: white !important; /* 导航栏链接字体颜色 */
+
+        text-decoration: none;
+    }
+    
+
+    h2 {
+    color: #1976d2;
+    }

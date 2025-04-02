@@ -8,7 +8,6 @@
     {{ render_nav_item('student_bp.student_account', '个人信息', sno=sno) }}
     {{ render_nav_item('student_bp.student_course_select', '学生选课', sno=sno) }}
     {{ render_nav_item('student_bp.student_course_delete', '学生退课', sno=sno) }}
-    {{ render_nav_item('student_bp.student_accuracy', '查看答题正确率', sno=sno) }}
     {{ render_nav_item('login_bp.index', '退出登录') }}
 
     <!-- <li class="nav-item">
@@ -25,11 +24,11 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
+<div class="container d-flex justify-content-center">
+    <div class="row w-75">  <!-- 控制整体宽度 -->
         <!-- 个人信息卡片 -->
-        <div class="col-md-4">
-            <div class="card shadow-sm">
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
                 <div class="card-header">
                     <h4>个人信息</h4>
                 </div>
@@ -42,40 +41,24 @@
                 </div>
             </div>
         </div>
-<!-- 课程信息卡片 -->
-<div class="col-md-4">
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h4>已选课程</h4>
-        </div>
-        <div class="card-body">
-            {% if courses %}
-                {% for course in courses %}
-                    <p><strong>{{ course.cname }}</strong> ({{ course.cno }}) - 任课教师：{{ course.tname }}</p>
-                {% endfor %}
-            {% else %}
-                <p>您尚未选课。</p>
-            {% endif %}
-        </div>
-    </div>
-</div>
 
-<!-- 成绩历史卡片 -->
-<div class="col-md-4">
-    <div class="card shadow-sm">
-        <div class="card-header">
-            <h4>成绩历史</h4>
-        </div>
-        <div class="card-body">
-            {% if answer_history %}
-                {% for history in answer_history %}
-                    <p><strong>{{ history.exam_name }}</strong> - 得分：{{ history.score }} / {{ history.total_score }}</p>
-                {% endfor %}
-            {% else %}
-                <p>暂无成绩记录。</p>
-            {% endif %}
+        <!-- 课程信息卡片 -->
+        <div class="col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header">
+                    <h4>已选课程</h4>
+                </div>
+                <div class="card-body">
+                    {% if courses %}
+                        {% for course in courses %}
+                            <p><strong>{{ course.cname }}</strong> ({{ course.cno }}) - 任课教师：{{ course.tname }}</p>
+                        {% endfor %}
+                    {% else %}
+                        <p>您尚未选课。</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
-</div>
 </div>
 {% endblock %}
