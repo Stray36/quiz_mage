@@ -108,6 +108,22 @@ function App() {
               </Switch>
             </Box>
           </Container>
+          {/* Footer */}
+        <footer style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '60px', 
+          padding: '10px' 
+        }}>
+          <small>
+            &copy; 2025 计算机设计大赛{' '}
+            <a href="http://127.0.0.1:5000/" title="Quiz Mage">
+              Quiz Mage
+            </a>
+          </small>
+        </footer>
+
         </div>
       </BrowserRouter>
     </ThemeProvider>
@@ -121,7 +137,7 @@ function App() {
             <Toolbar>
               <SchoolIcon sx={{ mr: 2 }} />
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Auto Quiz Generator
+                Quiz Mage 
               </Typography>
               <Button color="inherit" component={Link} to={`/?sno=${sno}`}>
                 首页
@@ -157,6 +173,22 @@ function App() {
               </Switch>
             </Box>
           </Container>
+          {/* Footer */}
+        <footer style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          alignItems: 'center', 
+          height: '60px', 
+          padding: '10px' 
+        }}>
+          <small>
+            &copy; 2025 计算机设计大赛{' '}
+            <a href="http://127.0.0.1:5000/" title="Quiz Mage">
+              Quiz Mage
+            </a>
+          </small>
+        </footer>
+
         </div>
       </BrowserRouter>
     </ThemeProvider>
