@@ -82,10 +82,11 @@ export function SpecificSurveyPage() {
         // 标记成功
         success = true;
         setProgress(100);
-        
+        let sno = getQueryParam('sno'); 
         // 延迟跳转，给用户足够时间阅读完成信息
         setTimeout(() => {
-          let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
+          // let sno = getQueryParam('sno'); 
+          console.log("aaa: ", sno)
           // 跳转到特定分析页面
           history.push(`/analytics/${result.analysis_id}?sno=${sno}`);
         }, 3000); // 3秒后跳转

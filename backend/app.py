@@ -102,9 +102,6 @@ def create_quiz():
     try:
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
         tno = request.args.get('tno')
-        
-        # if not sno:
-        #     return jsonify({"error": "缺少 sno 参数"}), 400
 
         if not sno and not tno:
             return jsonify({"error": "缺少 sno/tno 参数"}), 400
@@ -163,6 +160,8 @@ def create_quiz():
         # 保存到数据库
         file_name = file.filename
         title = f"{file_name} - {difficulty}难度 ({question_count}题)"
+        print("====================")
+        print(tno)
         quiz_id = save_quiz(tno, sno, title, file_name, quiz_json, question_count, difficulty)
         
         return jsonify({"success": True, "quiz_id": quiz_id}), 200

@@ -112,3 +112,12 @@
     h2 {
     color: #1976d2;
     }
+
+    .alert-container {
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050; /* 确保消息显示在其他内容之上 */
+        width: 50%; /* 控制消息宽度 */
+    }

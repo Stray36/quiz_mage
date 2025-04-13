@@ -2,20 +2,24 @@
 {% from 'bootstrap/table.html' import render_table %}
 
 {% block content %}
-    {% for message in messages %}
-        {% if message %}  {# 确保 message 不为空 #}
-            <h4>
-                {{ message[0].cname }} 
-
-                ID:{{ message[0].cno }}
-            </h4>
-            <br>
-            {{ render_table(message, titles=titles, primary_key='sno') }}  {# primary_key 使用 sno（学号） #}
-            <br>
-            <br>
-        {% else %}
-            <h3>该课程暂无学生选课</h3>
-            <br>
-        {% endif %}
-    {% endfor %}
+    <div class="table-container">
+        {% for message in messages %}
+            {% if message %}  {# 确保 message 不为空 #}
+                <div class="table-wrapper">
+                    <h4>
+                        {{ message[0].cname }} 
+                        ID: {{ message[0].cno }}
+                    </h4>
+                    <br>
+                    {{ render_table(message, titles=titles, primary_key='sno') }}  {# primary_key 使用 sno（学号） #}
+                    <br>
+                </div>
+            {% else %}
+                <div class="table-wrapper">
+                    <h3>该课程暂无学生选课</h3>
+                    <br>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endblock %}

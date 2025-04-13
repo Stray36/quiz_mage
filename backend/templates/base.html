@@ -24,7 +24,10 @@
     </nav>
 
     <main class="container">
-        {{ render_messages(container=False, dismissible=True) }}
+        <!-- 添加一个消息容器 -->
+        <div class="alert-container text-center">
+            {{ render_messages(container=False, dismissible=True) }}
+        </div>
         {% block content %}{% endblock %}
     </main>
 

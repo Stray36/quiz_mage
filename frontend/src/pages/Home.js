@@ -26,6 +26,13 @@ import { useHistory } from "react-router-dom";
 import { generateQuiz } from "../services/api";
 import PdfPreview from '../components/PdfPreview';
 
+const getQueryParam = (param) => {
+  // 创建一个URLSearchParams对象，用于获取URL中的参数
+  const urlParams = new URLSearchParams(window.location.search);
+  // 返回指定参数的值
+  return urlParams.get(param);
+};
+
 // 自定义文件上传按钮样式
 const VisuallyHiddenInput = styled('input')({
   clip: 'rect(0 0 0 0)',
@@ -141,9 +148,9 @@ export function HomePage() {
       // 修改: 从响应中获取quiz_id
       const response = await generateQuiz(formData);
       setLoading(false);
-      
+      let sno = getQueryParam('sno')
       // 生成成功后直接跳转到相应测验页面
-      history.push(`/survey/${response.quiz_id}`);
+      history.push(`/survey/${response.quiz_id}?sno=${sno}`);
     } catch (error) {
       setLoading(false);
       console.error("Error details:", error.response?.data);

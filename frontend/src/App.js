@@ -81,7 +81,7 @@ function App() {
                 测验历史
               </Button>
               <Button color="inherit" component={Link} to={`/analytics?tno=${tno}`}>
-                测验答案分析
+                测验答案
               </Button>
               <Button color="inherit" component={Link} to={`/HWanalytics?tno=${tno}`}>
                 学生作业分析

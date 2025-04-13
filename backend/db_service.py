@@ -74,7 +74,7 @@ def save_quiz(tno, sno, title, file_name, quiz_json, question_count, difficulty)
         
         cursor.execute('''
         INSERT INTO quizzes (tno, sno, title, file_name, quiz_json, question_count, difficulty)
-        VALUES (?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?,?)
         ''', (tno, sno, title, file_name, json.dumps(quiz_json), question_count, difficulty))
         
         quiz_id = cursor.lastrowid
@@ -99,9 +99,9 @@ def save_analysis(sno, quiz_id, analysis_json):
         cursor = conn.cursor()
         
         cursor.execute('''
-        INSERT INTO analysis_results (sno, quiz_id, analysis_json, tno)
-        VALUES (?, ?, ?, ?)
-        ''', (sno, quiz_id, json.dumps(analysis_json), None))
+        INSERT INTO analysis_results (sno, quiz_id, analysis_json)
+        VALUES (?, ?, ?)
+        ''', (sno, quiz_id, json.dumps(analysis_json)))
         
         analysis_id = cursor.lastrowid
         conn.commit()

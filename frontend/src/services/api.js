@@ -156,7 +156,7 @@ export const getTeacherAnalysisById = async (analysisId) => {
   }
 }
 
-// 生成测验（将 sno 作为 URL 参数，而不是 FormData 传递）
+// 生成测验
 export const generateQuiz = async (formData) => {
   try {
     const sno = getSno();
@@ -234,7 +234,7 @@ const getTno = () => {
 };
 
 
-// 生成测验（将 sno 作为 URL 参数，而不是 FormData 传递）
+// 生成测验
 export const generateQuiz4teacher = async (formData) => {
   try {
     const tno = getTno();

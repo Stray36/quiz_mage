@@ -23,8 +23,14 @@ import {
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { styled } from '@mui/material/styles';
 import { useHistory } from "react-router-dom";
-import { generateQuiz } from "../services/api";
+import { generateQuiz4teacher } from "../services/api";
 import PdfPreview from '../components/PdfPreview';
+
+const getQueryParam = (param) => {
+  // 创建一个URLSearchParams对象，用于获取URL中的参数
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+};
 
 // 自定义文件上传按钮样式
 const VisuallyHiddenInput = styled('input')({
@@ -140,11 +146,12 @@ export function TeacherHome() {
 
     try {
       // 修改: 从响应中获取quiz_id
-      const response = await generateQuiz(formData);
+      const response = await generateQuiz4teacher(formData);
       setLoading(false);
       
+      let tno = getQueryParam('tno')
       // 生成成功后直接跳转到相应测验页面
-      history.push(`/survey/${response.quiz_id}`);
+      history.push(`/survey/${response.quiz_id}?tno=${tno}`);
     } catch (error) {
       setLoading(false);
       console.error("Error details:", error.response?.data);
