@@ -27,6 +27,7 @@ import { HomeworkPage }  from "./TeacherPages/HomeworkAnalytics";
 import { TeacherAnalyticsPage } from "./TeacherPages/TeacherAnalytics";
 import { TeacherSpecificPage } from "./TeacherPages/TeacherSpecific";
 import { SpecificHomeworkPage } from "./TeacherPages/SpecificHomework";
+import { TeacherSpecificSurveyPage } from "./TeacherPages/TeacherSpecificSurvey";
 
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -97,7 +98,7 @@ function App() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Box sx={{ py: 2 }}>
               <Switch>
-                <Route path="/survey/:quizId" render={(props) => <SpecificSurveyPage {...props} tno={tno} />} />
+                <Route path="/survey/:quizId" render={(props) => <TeacherSpecificSurveyPage {...props} tno={tno} />} />
                 <Route path="/survey" render={(props) => <TeacherQuizHistoryPage {...props} tno={tno} />} />
                 <Route path="/analytics/:analysisId" render={(props) => <TeacherSpecificPage {...props} tno={tno} />} />
                 <Route path="/analytics" render={(props) => <TeacherAnalyticsPage {...props} tno={tno} />} />

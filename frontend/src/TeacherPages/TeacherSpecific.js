@@ -22,7 +22,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import SchoolIcon from '@mui/icons-material/School';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { getAnalysisById } from '../services/api';
+import { getTeacherAnalysisById } from '../services/api';
 
 const getQueryParam = (param) => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -39,7 +39,7 @@ export function TeacherSpecificPage() {
   useEffect(() => {
     const fetchAnalysis = async () => {
       try {
-        const data = await getAnalysisById(analysisId);
+        const data = await getTeacherAnalysisById(analysisId);
         setAnalysis(data);
         setIsLoading(false);
       } catch (error) {
@@ -87,8 +87,8 @@ export function TeacherSpecificPage() {
           startIcon={<ArrowBackIcon />} 
           
           onClick={() => {
-            let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
-            history.push(`/analytics?sno=${sno}`)} }
+            let tno = getQueryParam('tno'); // 尝试从 URL 获取学号
+            history.push(`/analytics?tno=${tno}`)} }
           sx={{ mr: 2 }}
         >
           返回列表

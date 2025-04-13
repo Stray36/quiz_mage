@@ -19,8 +19,7 @@ import {
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import DescriptionIcon from '@mui/icons-material/Description';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-//import getSno from '../services/api';
-import { getTeacherAnalyses } from '../services/api';
+import { getTeacherQuizAnalyses } from '../services/api';
 import { format } from 'date-fns';
 
 const getQueryParam = (param) => {
@@ -37,7 +36,7 @@ export function TeacherAnalyticsPage() {
   useEffect(() => {
     const fetchAnalyses = async () => {
       try {
-        const data = await getTeacherAnalyses();
+        const data = await getTeacherQuizAnalyses();
         setAnalyses(data);
         setLoading(false);
       } catch (error) {
@@ -51,10 +50,9 @@ export function TeacherAnalyticsPage() {
   }, []);
 
   const handleViewAnalysis = (analysisId) => {
-    let sno = getQueryParam('tno'); // 尝试从 URL 获取学号
-    console.log("tno:", tno, typeof tno); // 这里检查 sno 是否是字符串
-    history.push(`/analytics/${analysisId}?sno=${sno}`);
-    // history.push(`/analytics/${analysisId}`);
+    let tno = getQueryParam('tno'); 
+    console.log("tno:", tno, typeof tno); 
+    history.push(`/analytics/${analysisId}?tno=${tno}`);
   };
 
   // 格式化日期

@@ -81,7 +81,7 @@ export const getQuizById = async (quizId) => {
   }
 };
 
-// 获取所有分析结果
+// 获取学生所有测验的分析结果
 export const getAnalyses = async () => {
   try {
     const sno = getSno();
@@ -93,6 +93,21 @@ export const getAnalyses = async () => {
   }
 };
 
+
+// 获取老师所有测验的分析结果
+export const getTeacherQuizAnalyses = async () => {
+  try {
+    const tno = getTno();
+    const response = await api.get(`/teacher_analyses?tno=${tno}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching analyses:', error);
+    throw error;
+  }
+};
+
+
+// 获取老师已发布作业的分析结果
 export const getTeacherAnalyses = async () => {
   try {
     const tno = getTno();
@@ -129,6 +144,18 @@ export const getAnalysisById = async (analysisId) => {
   }
 };
 
+// 获取指定 ID 的分析结果（教师）
+export const getTeacherAnalysisById = async (analysisId) => {
+  try {
+    const tno = getTno();
+    const response = await api.get(`/teacher_analyses/${analysisId}?tno=${tno}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching analysis ${analysisId}:`, error);
+    throw error;
+  }
+}
+
 // 生成测验（将 sno 作为 URL 参数，而不是 FormData 传递）
 export const generateQuiz = async (formData) => {
   try {
@@ -152,11 +179,26 @@ export const publishQuiz = async (quizId, cno) => {
   }
 }
 
-// 分析测验
+// 学生的分析测验
 export const analyzeQuiz = async (answers, quizId) => {
   try {
     const sno = getSno();
     const response = await api.post(`/analyze-quiz?sno=${sno}`, { 
+      answers, 
+      quiz_id: quizId 
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error analyzing quiz:', error);
+    throw error;
+  }
+};
+
+// 教师的分析测验
+export const analyzeTeacherQuiz = async (answers, quizId) => {
+  try {
+    const tno = getTno();
+    const response = await api.post(`/analyze-quiz?tno=${tno}`, { 
       answers, 
       quiz_id: quizId 
     });
