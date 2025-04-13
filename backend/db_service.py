@@ -92,16 +92,16 @@ def save_quiz(tno, sno, title, file_name, quiz_json, question_count, difficulty)
 
 
 def save_analysis(sno, quiz_id, analysis_json):
-    """保存分析结果到数据库，并绑定学号 sno"""
+    """保存学生分析结果到数据库，并绑定学号 sno"""
     conn = None
     try:
         conn = sqlite3.connect(DB_FILE)
         cursor = conn.cursor()
         
         cursor.execute('''
-        INSERT INTO analysis_results (sno, quiz_id, analysis_json)
-        VALUES (?, ?, ?)
-        ''', (sno, quiz_id, json.dumps(analysis_json)))
+        INSERT INTO analysis_results (sno, quiz_id, analysis_json, tno)
+        VALUES (?, ?, ?, ?)
+        ''', (sno, quiz_id, json.dumps(analysis_json), None))
         
         analysis_id = cursor.lastrowid
         conn.commit()
@@ -116,6 +116,30 @@ def save_analysis(sno, quiz_id, analysis_json):
         if conn:
             conn.close()
 
+def save_teacher_analysis(tno, quiz_id, analysis_json):
+    """保存教师分析结果到数据库，并绑定tno"""
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+        INSERT INTO analysis_results (tno, quiz_id, analysis_json, sno)
+        VALUES (?, ?, ?, ?)
+        ''', (tno, quiz_id, json.dumps(analysis_json), None))
+        
+        analysis_id = cursor.lastrowid
+        conn.commit()
+        logger.info(f"分析结果保存成功，ID: {analysis_id}，教师号: {tno}")
+        return analysis_id
+    except Exception as e:
+        logger.error(f"保存分析结果失败: {str(e)}")
+        if conn:
+            conn.rollback()
+        raise
+    finally:
+        if conn:
+            conn.close()
 
 def get_quiz_by_id(quiz_id):
     """根据ID获取测验题目"""
@@ -144,7 +168,7 @@ def get_quiz_by_id(quiz_id):
             conn.close()
 
 def get_analysis_by_id(sno, analysis_id):
-    """根据ID获取分析结果"""
+    """根据学生ID获取分析结果"""
     conn = None
     try:
         conn = sqlite3.connect(DB_FILE)
@@ -168,6 +192,34 @@ def get_analysis_by_id(sno, analysis_id):
         if conn:
             conn.close()
 
+
+def get_teacher_analysis_by_id(tno, analysis_id):
+    """根据老师ID获取分析结果"""
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+        SELECT * FROM analysis_results WHERE id = ? AND tno = ?
+        ''', (analysis_id, tno))
+        
+        row = cursor.fetchone()
+        if row:
+            analysis = dict(row)
+            analysis['analysis_json'] = json.loads(analysis['analysis_json'])
+            print()
+            return analysis
+        return None
+    except Exception as e:
+        logger.error(f"获取分析结果失败: {str(e)}")
+        raise
+    finally:
+        if conn:
+            conn.close()
+
+
 def get_analysis_by_quiz_id(sno, quiz_id):
     """根据测验ID获取分析结果"""
     conn = None
@@ -190,32 +242,6 @@ def get_analysis_by_quiz_id(sno, quiz_id):
         return analyses
     except Exception as e:
         logger.error(f"获取分析结果失败: {str(e)}")
-        raise
-    finally:
-        if conn:
-            conn.close()
-
-# def get_all_quizzes(sno):
-    """获取所有测验"""
-    print("get_all_quizzes")
-    conn = None
-    try:
-        conn = sqlite3.connect(DB_FILE)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        
-        cursor.execute('''
-        SELECT id, title, file_name, question_count, difficulty, created_at
-        FROM quizzes
-        WHERE sno = ?
-        ORDER BY created_at DESC
-        ''', (sno,))
-        
-        rows = cursor.fetchall()
-        quizzes = [dict(row) for row in rows]
-        return quizzes
-    except Exception as e:
-        logger.error(f"获取所有测验失败: {str(e)}")
         raise
     finally:
         if conn:
@@ -333,10 +359,8 @@ def get_all_quizzes(sno):
         if conn:
             conn.close()
 
-
 def get_all_quizzes4teacher(tno):
-    """获取所有测验"""
-    # print("get_all_quizzes4teacher")
+    """获取老师发布的所有测验"""
     conn = None
     try:
         conn = sqlite3.connect(DB_FILE)
@@ -359,6 +383,36 @@ def get_all_quizzes4teacher(tno):
     finally:
         if conn:
             conn.close()
+
+
+# 获取老师的所有测验分析
+def get_t_all_analyses(tno):
+    """获取所有分析结果"""
+    conn = None
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+        SELECT ar.id, ar.quiz_id, ar.created_at, 
+               q.title AS quiz_title, q.file_name
+        FROM analysis_results ar
+        JOIN quizzes q ON ar.quiz_id = q.id
+        WHERE ar.tno = ?
+        ORDER BY ar.created_at DESC
+        ''', (tno,))
+        
+        rows = cursor.fetchall()
+        analyses = [dict(row) for row in rows]
+        return analyses
+    except Exception as e:
+        logger.error(f"获取所有分析结果失败: {str(e)}")
+        raise
+    finally:
+        if conn:
+            conn.close()
+
 
 def get_all_analyses(sno):
     """获取所有分析结果"""
@@ -399,7 +453,7 @@ def get_teacher_analyses(tno):
                q.title AS quiz_title, q.file_name
         FROM analysis_results ar
         JOIN quizzes q ON ar.quiz_id = q.id
-        WHERE ar.sno = ?
+        WHERE ar.tno = ?
         ORDER BY ar.created_at DESC
         ''', (tno,))
         
@@ -463,93 +517,6 @@ def insert_homework(cno, qid):
     except Exception as e:
         logger.error(f"插入 homework 数据失败: {str(e)}")
         raise
-
-# def get_course_quiz_error_rates(tno):
-    """
-    统计某一门课程不同 quizid 的总体错误率。
-    
-    参数:
-        tno (str): 教师号
-    
-    返回:
-        list: 包含 {courseid, quizid, error_rate} 的字典列表
-    """
-    conn = None
-    try:
-        # 连接数据库
-        conn = sqlite3.connect(DB_FILE)
-        conn.row_factory = sqlite3.Row  # 使用字典形式访问行
-        cursor = conn.cursor()
-
-        # Step 1: 根据 tno 查询教师教授的课程 cno
-        cursor.execute('''
-        SELECT cno 
-        FROM course 
-        WHERE tno = ?
-        ''', (tno,))
-        courses = cursor.fetchall()
-
-        if not courses:
-            logger.warning(f"教师号 {tno} 没有教授任何课程")
-            return []
-
-        # Step 2: 遍历每门课程，获取相关 quizid
-        result = []
-        for course in courses:
-            cno = course['cno']
-
-            # 根据 cno 查询 homework 表中的 quizid
-            cursor.execute('''
-            SELECT DISTINCT qid 
-            FROM homework 
-            WHERE cno = ?
-            ''', (cno,))
-            quizids = cursor.fetchall()
-
-            if not quizids:
-                logger.warning(f"课程 {cno} 没有相关的测验")
-                continue
-
-            # Step 3: 遍历每个 quizid，计算错误率
-            for quiz in quizids:
-                qid = quiz['qid']
-
-                # 根据 quizid 查询 analysis_results 表中的 analysis_json
-                cursor.execute('''
-                SELECT analysis_json 
-                FROM analysis_results 
-                WHERE quiz_id = ?
-                ''', (qid,))
-                analyses = cursor.fetchall()
-
-                total_questions = 0
-                incorrect_count = 0
-
-                for analysis in analyses:
-                    analysis_data = json.loads(analysis['analysis_json'])
-                    total_questions += analysis_data.get("totalQuestions", 0)
-                    incorrect_count += analysis_data.get("incorrectCount", 0)
-
-                # 计算错误率
-                error_rate = 0
-                if total_questions > 0:
-                    error_rate = incorrect_count / total_questions
-
-                # 添加到结果列表
-                result.append({
-                    "courseid": cno,
-                    "quizid": qid,
-                    "error_rate": error_rate
-                })
-
-        return result
-
-    except Exception as e:
-        logger.error(f"统计错误率失败: {str(e)}")
-        raise
-    finally:
-        if conn:
-            conn.close()
 
 def get_course_quiz_error_rates(tno):
     """
@@ -674,7 +641,6 @@ def get_homeworks_teacher(tno):
     except Exception as e:
         logger.error(f"查询失败: {str(e)}")
         raise
-
 
 def get_quiz_error_rates(quizid):
     """

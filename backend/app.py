@@ -176,9 +176,8 @@ def create_quiz():
 def analyze_quiz():
     try:
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        tno = request.args.get("tno") 
         
-        if not sno:
-            return jsonify({"error": "缺少 sno 参数"}), 400
         # 获取用户答案和测验ID
         data = request.json
         if not data or 'answers' not in data:
@@ -199,8 +198,12 @@ def analyze_quiz():
             result = analyze_quiz_results(data['answers'])
         
         # 保存分析结果到数据库
-        if quiz_id:
+        if quiz_id and sno:
             analysis_id = save_analysis(sno, quiz_id, result)
+            result["analysis_id"] = analysis_id
+
+        if quiz_id and tno:
+            analysis_id = save_teacher_analysis(tno, quiz_id, result)
             result["analysis_id"] = analysis_id
         
         return jsonify(result), 200
@@ -300,7 +303,10 @@ def get_quiz(quiz_id):
 
 @app.route('/analyses', methods=['GET'])
 def get_analyses():
-    """获取所有测验"""
+    """
+        1.获取学生所有的测验分析 
+        2.获取老师已发布作业的分析
+    """
     try:        
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
         tno = request.args.get('tno')
@@ -317,18 +323,47 @@ def get_analyses():
             print(quizzes)
         return jsonify(quizzes), 200
     except Exception as e:
-        logger.error(f"获取测验列表失败: {str(e)}")
+        logger.error(f"获取失败: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+
+# 获取老师所有的测验分析
+@app.route('/teacher_analyses', methods=['GET'])
+def get_teacher_all_analyses():
+    try:
+        tno = request.args.get('tno')
+        analyses = get_t_all_analyses(tno)
+        return jsonify(analyses), 200
+    except Exception as e:
+        logger.error(f"获取测验列表失败: {str(e)}")
+    return jsonify({"error": str(e)}), 500
 
 
 @app.route('/analyses/<int:analysis_id>', methods=['GET'])
 def get_analysis(analysis_id):
-    """获取指定ID的分析结果"""
+    """获取学生指定ID的分析结果"""
     try:
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
         if not sno:
             return jsonify({"error": "缺少 sno 参数"}), 400
         analysis = get_analysis_by_id(sno, analysis_id)
+        if analysis:
+            return jsonify(analysis), 200
+        return jsonify({"error": "分析结果不存在"}), 404
+    except Exception as e:
+        logger.error(f"获取分析结果失败: {str(e)}")
+
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/teacher_analyses/<int:analysis_id>', methods=['GET'])
+def get_teacher_analysis(analysis_id):
+    """获取老师指定ID的分析结果"""
+    try:
+        tno = request.args.get('tno')  # 从 URL 参数获取 sno
+        if not tno:
+            return jsonify({"error": "缺少 tno 参数"}), 400
+        analysis = get_teacher_analysis_by_id(tno, analysis_id)
         if analysis:
             return jsonify(analysis), 200
         return jsonify({"error": "分析结果不存在"}), 404
