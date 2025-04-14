@@ -6,3 +6,5 @@ Dockerfile.backend
 Dockerfile.frontend
 .github/
 backend/__pycache__/
+backend/.env
+backend/database.db

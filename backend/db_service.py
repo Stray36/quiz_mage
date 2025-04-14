@@ -9,7 +9,7 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-DB_FILE = "merged_database.db"
+DB_FILE = "database.db"
 
 with open('stop_words.txt', 'r', encoding='utf-8') as f:
     STOP_WORDS = {line.strip() for line in f if line.strip()}

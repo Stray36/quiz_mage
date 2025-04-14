@@ -10,7 +10,6 @@ import config
 from quiz_service import generate_quiz, update_survey_json
 from file_service import extract_text_from_pdf,generate_pdf_previews
 from analysis_service import analyze_quiz_results
-# from db_service import init_database, save_quiz, save_analysis, get_quiz_by_id, get_analysis_by_id, get_all_quizzes, get_all_quizzes4teacher, get_all_analyses, get_all_classes, insert_homework
 from db_service import *
 
 # 配置日志
@@ -32,7 +31,7 @@ from flask_sqlalchemy import SQLAlchemy
 config.init_configuration()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///merged_database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 
 
 # 初始化扩展
@@ -106,13 +105,6 @@ def create_quiz():
         if not sno and not tno:
             return jsonify({"error": "缺少 sno/tno 参数"}), 400
         
-        #如果是学生自主创建题目
-        if not tno:
-            tno = 0
-
-        #如果是老师发布题目
-
-
         # 获取上传的文件
         if 'file' not in request.files:
             return jsonify({"error": "未上传文件"}), 400
@@ -160,8 +152,7 @@ def create_quiz():
         # 保存到数据库
         file_name = file.filename
         title = f"{file_name} - {difficulty}难度 ({question_count}题)"
-        print("====================")
-        print(tno)
+
         quiz_id = save_quiz(tno, sno, title, file_name, quiz_json, question_count, difficulty)
         
         return jsonify({"success": True, "quiz_id": quiz_id}), 200
@@ -240,12 +231,9 @@ def get_quizzes():
             print("缺少 sno/tno 参数")
             return jsonify({"error": "缺少 sno tno参数"}), 400
         if sno:
-            print("sno")
             quizzes = get_all_quizzes(sno)
         else:
-            print("tno")
             quizzes = get_all_quizzes4teacher(tno)
-            print(quizzes)
         return jsonify(quizzes), 200
     except Exception as e:
         logger.error(f"获取作业列表失败: {str(e)}")
@@ -319,7 +307,7 @@ def get_analyses():
         else:
             print("tno")
             quizzes = get_teacher_analyses(tno)
-            print(quizzes)
+            # print(quizzes)
         return jsonify(quizzes), 200
     except Exception as e:
         logger.error(f"获取失败: {str(e)}")
@@ -379,7 +367,6 @@ def get_Homework():
         if not tno:
             return jsonify({"error": "缺少 sno 参数"}), 400
         homeworks = get_homeworks_teacher(tno)
-        print(homeworks)
         return jsonify(homeworks), 200
     except Exception as e:
         logger.error(f"获取作业列表失败: {str(e)}")
