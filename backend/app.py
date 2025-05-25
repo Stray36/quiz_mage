@@ -204,14 +204,14 @@ def analyze_quiz():
 
 
 @app.route('/auto_quiz', methods=['GET'])
-def get_quizzes_0():
+def get_student_quizzes():
     """获取所有测验"""
     try:        
         sno = request.args.get('sno')  # 从 URL 参数获取 sno
         if not sno:
             return jsonify({"error": "缺少 sno 参数"}), 400
 
-        quizzes = get_all_quizzes0(sno)
+        quizzes = get_all_quizzes(sno)
         return jsonify(quizzes), 200
     except Exception as e:
         logger.error(f"获取测验列表失败: {str(e)}")
@@ -231,7 +231,7 @@ def get_quizzes():
             print("缺少 sno/tno 参数")
             return jsonify({"error": "缺少 sno tno参数"}), 400
         if sno:
-            quizzes = get_all_quizzes(sno)
+            quizzes = get_all_quizzes4student(sno)
         else:
             quizzes = get_all_quizzes4teacher(tno)
         return jsonify(quizzes), 200

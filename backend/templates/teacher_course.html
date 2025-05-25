@@ -2,10 +2,10 @@
 {% from 'bootstrap/table.html' import render_table %}
 
 {% block content %}
-    <div class="table-container">
+    <div class="table-responsive">
         {% for message in messages %}
-            {% if message %}  {# 确保 message 不为空 #}
-                <div class="table-wrapper">
+            {% if message %}  
+                <div class="table-striped">
                     <h4>
                         {{ message[0].cname }} 
                         ID: {{ message[0].cno }}

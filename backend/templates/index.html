@@ -1,17 +1,31 @@
 {% extends 'base.html' %}
 {% from 'bootstrap/form.html' import render_form %}
 {% from 'bootstrap/nav.html' import render_nav_item %}
-{% from 'bootstrap/utils.html' import render_messages %}  {# 修正这里 #}
+{% from 'bootstrap/utils.html' import render_messages %}  
 
 {% block head %}
     {{ render_nav_item('login_bp.index', 'Home') }}
 {% endblock %}
 
 {% block content %}
-<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%;">
+<div class="container d-flex flex-column align-items-center justify-content-center" style="min-height: 100vh;">
+
+    <!-- 猫头鹰容器 -->
+    <div class="owl">
+        <div class="owl-head"></div>
+        <div class="hand"></div>
+        <div class="hand hand-r"></div>
+        <div class="arms">
+            <div class="arm"></div>
+            <div class="arm arm-r"></div>
+        </div>
+    </div>
+
+
+    <!-- 登录卡片 -->
+    <div class="card shadow-lg p-4" style="max-width: 400px; width: 100%; margin-top: -40px; z-index: 1;">
         <div class="card-body">
-            <h2 class="text-center mb-4"> 登录</h2>
+            <h2 class="text-center mb-4">登录</h2>
             
             <!-- 登录表单 -->
             {{ render_form(form, button_map={'submit': 'primary btn-block'}) }}
@@ -22,5 +36,24 @@
             </p>
         </div>
     </div>
+
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 使用属性选择器获取密码输入框
+        const passwordInput = document.querySelector('input[type="password"]');
+        const owl = document.querySelector('.owl');
+        
+        if (passwordInput && owl) {
+          passwordInput.addEventListener('focus', function() {
+            owl.classList.add('password');
+          });
+          
+          passwordInput.addEventListener('blur', function() {
+            owl.classList.remove('password');
+          });
+        }
+      });
+</script>
 {% endblock %}

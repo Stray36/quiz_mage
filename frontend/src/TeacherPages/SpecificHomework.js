@@ -72,7 +72,7 @@ export function SpecificHomeworkPage() {
         作业分析页面
       </Typography>
       <Typography variant="subtitle1" gutterBottom>
-        Analysis ID: {analysisId}, Teacher Number: {tno}
+        ID: {analysisId}, 教师号: {tno}
       </Typography>
 
       {/* 扇形图：总体正确率与错误率 */}
@@ -121,7 +121,9 @@ export function SpecificHomeworkPage() {
       {/* 词云图 */}
       <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
         <div>
-            <h1>词云示例</h1>
+            <Typography variant="h6" gutterBottom>
+              词云图
+            </Typography>
             <WordCloudComponent data={wordCloudData} />
         </div>
       </Paper>

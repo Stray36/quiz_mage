@@ -248,7 +248,7 @@ def get_analysis_by_quiz_id(sno, quiz_id):
             conn.close()
 
 # 获取所有测验
-def get_all_quizzes0(sno):
+def get_all_quizzes(sno):
     """获取所有测验"""
     conn = None
     try:
@@ -274,7 +274,7 @@ def get_all_quizzes0(sno):
             conn.close()
 
 # 获取所有作业
-def get_all_quizzes(sno):
+def get_all_quizzes4student(sno):
     conn = None
     try:
         # 连接数据库
