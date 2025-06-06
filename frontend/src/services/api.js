@@ -8,15 +8,14 @@ const api = axios.create({
   timeout: 30000, // 30秒超时
 });
 
-// 从 URL 获取查询参数
+
 const getQueryParam = (param) => {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
 };
 
-// 获取学号（优先从 URL 获取，如果没有，则从 localStorage 获取）
 const getSno = () => {
-  let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
+  let sno = getQueryParam('sno'); 
   if (!sno) {
     sno = 0; // 回退到 localStorage
   }
@@ -226,7 +225,7 @@ export default api;
 
 
 const getTno = () => {
-  let tno = getQueryParam('tno'); // 尝试从 URL 获取学号
+  let tno = getQueryParam('tno'); 
   if (!tno) {
     tno = 0; // 回退到 localStorage
   }

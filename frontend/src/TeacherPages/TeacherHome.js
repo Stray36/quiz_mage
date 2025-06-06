@@ -27,7 +27,7 @@ import { generateQuiz4teacher } from "../services/api";
 import PdfPreview from '../components/PdfPreview';
 
 const getQueryParam = (param) => {
-  // 创建一个URLSearchParams对象，用于获取URL中的参数
+  // 创建一个URLSearchParams对象
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
 };

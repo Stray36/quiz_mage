@@ -6,6 +6,8 @@ import time
 from functools import wraps
 import json
 
+from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
 import config
 from quiz_service import generate_quiz, update_survey_json
 from file_service import extract_text_from_pdf,generate_pdf_previews
@@ -25,8 +27,6 @@ CORS(app)
 init_database()  # 初始化数据库
 
 
-from flask_bootstrap import Bootstrap
-from flask_sqlalchemy import SQLAlchemy
 # 初始化配置
 config.init_configuration()
 
@@ -99,7 +99,7 @@ def preview_pdf():
 @app.route('/generate-quiz', methods=['POST'])
 def create_quiz():
     try:
-        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        sno = request.args.get('sno') 
         tno = request.args.get('tno')
 
         if not sno and not tno:
@@ -165,7 +165,7 @@ def create_quiz():
 @with_retry(max_retries=3, backoff_factor=0.5)
 def analyze_quiz():
     try:
-        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        sno = request.args.get('sno')  
         tno = request.args.get("tno") 
         
         # 获取用户答案和测验ID
@@ -207,7 +207,7 @@ def analyze_quiz():
 def get_student_quizzes():
     """获取所有测验"""
     try:        
-        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        sno = request.args.get('sno')  
         if not sno:
             return jsonify({"error": "缺少 sno 参数"}), 400
 
@@ -222,7 +222,7 @@ def get_student_quizzes():
 def get_quizzes():
     """获取所有作业"""
     try:        
-        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        sno = request.args.get('sno')  
         tno = request.args.get('tno')
         # if not sno:
         #     return jsonify({"error": "缺少 sno 参数"}), 400
@@ -244,7 +244,7 @@ def get_quizzes():
 def get_classes():
     """获取所有班级"""
     try:
-        tno = request.args.get('tno')  # 从 URL 参数获取 sno
+        tno = request.args.get('tno') 
         print("getClasses:", tno)
         if not tno:
             return jsonify({"error": "缺少 sno 参数"}), 400
@@ -275,7 +275,7 @@ def get_quiz(quiz_id):
     """获取指定ID的测验"""
     try:
         # print("get_quiz")
-        # sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        # sno = request.args.get('sno') 
         # if not sno:
         #     return jsonify({"error": "缺少 sno 参数"}), 400
         quiz = get_quiz_by_id(quiz_id)
@@ -295,7 +295,7 @@ def get_analyses():
         2.获取老师已发布作业的分析
     """
     try:        
-        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        sno = request.args.get('sno')  
         tno = request.args.get('tno')
 
         if not sno and not tno:
@@ -330,7 +330,7 @@ def get_teacher_all_analyses():
 def get_analysis(analysis_id):
     """获取学生指定ID的分析结果"""
     try:
-        sno = request.args.get('sno')  # 从 URL 参数获取 sno
+        sno = request.args.get('sno') 
         if not sno:
             return jsonify({"error": "缺少 sno 参数"}), 400
         analysis = get_analysis_by_id(sno, analysis_id)
@@ -347,7 +347,7 @@ def get_analysis(analysis_id):
 def get_teacher_analysis(analysis_id):
     """获取老师指定ID的分析结果"""
     try:
-        tno = request.args.get('tno')  # 从 URL 参数获取 sno
+        tno = request.args.get('tno') 
         if not tno:
             return jsonify({"error": "缺少 tno 参数"}), 400
         analysis = get_teacher_analysis_by_id(tno, analysis_id)

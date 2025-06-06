@@ -68,8 +68,8 @@ export function TeacherQuizHistoryPage() {
   }, []);
 
   const handleStartQuiz = (quizId) => {
-    let tno = getQueryParam('tno'); // 尝试从 URL 获取学号
-    console.log("tno:", tno, typeof tno); // 这里检查 tno 是否是字符串
+    let tno = getQueryParam('tno'); 
+    console.log("tno:", tno, typeof tno); // 检查 tno 是否是字符串
     history.push(`/survey/${quizId}?tno=${tno}`);
   };
 

@@ -87,7 +87,7 @@ export function SpecificAnalyticsPage() {
           startIcon={<ArrowBackIcon />} 
           
           onClick={() => {
-            let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
+            let sno = getQueryParam('sno'); 
             history.push(`/analytics?sno=${sno}`)} }
           sx={{ mr: 2 }}
         >

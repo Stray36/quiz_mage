@@ -118,7 +118,7 @@ function App() {
           padding: '10px' 
         }}>
           <small>
-            &copy; 2025 计算机设计大赛{' '}
+            &copy; 2025 软件工程大作业{' '}
             <a href="http://127.0.0.1:5000/" title="Quiz Mage">
               Quiz Mage
             </a>
@@ -183,7 +183,7 @@ function App() {
           padding: '10px' 
         }}>
           <small>
-            &copy; 2025 计算机设计大赛{' '}
+            &copy; 2025 软件工程大作业{' '}
             <a href="http://127.0.0.1:5000/" title="Quiz Mage">
               Quiz Mage
             </a>

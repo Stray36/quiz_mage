@@ -49,8 +49,8 @@ export function QuizPage() {
   }, []);
 
   const handleStartQuiz = (quizId) => {
-    let sno = getQueryParam('sno'); // 尝试从 URL 获取学号
-    console.log("sno:", sno, typeof sno); // 这里检查 sno 是否是字符串
+    let sno = getQueryParam('sno'); 
+    console.log("sno:", sno, typeof sno); // 检查 sno 是否是字符串
     history.push(`/survey/${quizId}?sno=${sno}`);
     // history.push(`/survey/${quizId}`);
   };

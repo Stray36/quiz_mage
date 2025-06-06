@@ -87,7 +87,7 @@ export function TeacherSpecificPage() {
           startIcon={<ArrowBackIcon />} 
           
           onClick={() => {
-            let tno = getQueryParam('tno'); // 尝试从 URL 获取学号
+            let tno = getQueryParam('tno'); 
             history.push(`/analytics?tno=${tno}`)} }
           sx={{ mr: 2 }}
         >
